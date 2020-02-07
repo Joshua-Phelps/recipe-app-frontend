@@ -9,7 +9,7 @@ class App extends Component  {
   render(){
     return (
           <p>
-            Testing
+            Testing / Bahay
           </p>
     );
   }
