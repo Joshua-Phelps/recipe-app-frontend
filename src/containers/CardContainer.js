@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 import RecipeCard from '../components/RecipeCard'
 
+import { Card, Grid } from 'semantic-ui-react'
+
+
+// import { Grid } from 'semantic-ui-react'
+
 
 class CardContainer extends Component {
 
@@ -11,7 +16,9 @@ class CardContainer extends Component {
         return this.props.recipes.map(recipe => {
             return (
             <div>
-                <RecipeCard recipe={recipe}  />
+
+                 <RecipeCard recipe={recipe}  />
+            
             </div>
             )
         })
@@ -20,7 +27,10 @@ class CardContainer extends Component {
     render() {
         return (
             <div>
-                {this.renderCards()}
+            <Card.Group itemsPerRow={3}>
+                    {this.renderCards()}
+            </Card.Group>
+
             </div>
         )
     }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+
 import CardContainer from '../containers/CardContainer'
 
 class MainPage extends Component {
