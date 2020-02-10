@@ -18,7 +18,7 @@ class CardContainer extends Component {
             return this.props.recipes.map(recipe => {
                 return (
                 <div>
-                    <RecipeCard recipe={recipe.recipe} ingredients={recipe.ingredients}  />
+                    <RecipeCard onShowDetails={this.props.onShowDetails}  recipe={recipe} />
                 </div>
                 )
             })

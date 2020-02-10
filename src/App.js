@@ -6,13 +6,15 @@ import './App.css';
 
 import MainPage from './components/MainPage'
 import MyPage from './components/MyPage'
+import Details from './components/Details'
 
 class App extends Component  {
 
   state = {
     allRecipes: [],
-    myRecipes: [],
-    user: null
+    myRecipes: false,
+    user: null, 
+    selectedRecipe: false 
   } 
 
 
@@ -20,9 +22,6 @@ class App extends Component  {
     // this.fetchRecipes()
     this.fetchMyRecipes()
   }
-
-
-
 
   fetchRecipes = () => {
     fetch('http://localhost:3000/recipes')
@@ -35,13 +34,24 @@ class App extends Component  {
     .then(res => res.json())
     .then(data => this.setState({myRecipes: data}))
   }
+
+  showDetails = recipe => {
+    this.setState({selectedRecipe: recipe})
+  }
+
+  
+
+
   
   render(){
     return (
           <div>
             {/* <NavBar />  */}
-            <MyPage favoriteRecipes={this.state.myRecipes.favorite_recipes} ownedRecipes={this.state.myRecipes.owned_recipes} /> 
-            <MainPage recipes={this.state.allRecipes} />
+            {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
+            ) : (
+              <MyPage onShowDetails={this.showDetails} favoriteRecipes={this.state.myRecipes.favorite_recipes} ownedRecipes={this.state.myRecipes.owned_recipes} /> 
+              // <MainPage recipes={this.state.allRecipes} />
+              )} 
           </div>
         
     );

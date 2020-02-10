@@ -14,12 +14,18 @@ class RecipeCard extends Component {
 // Signed in and its your own recipe 
 // button to edit/delete  
 
-    render() {
-        return (
-            <div padding-right= "10px">
-                <Card raised image={this.props.recipe.img} header={this.props.recipe.title} />
-            </div>
+handleShowDetails = () => {
+    this.props.onShowDetails(this.props.recipe)
+}
 
+
+    render() {
+        let { recipe } = this.props.recipe
+        let { ingredients } = this.props.recipe
+        return (
+            <div onClick={() => this.handleShowDetails()} padding-right= "10px">
+                <Card raised image={recipe.img} header={recipe.title} />
+            </div>
         )
     }
 
