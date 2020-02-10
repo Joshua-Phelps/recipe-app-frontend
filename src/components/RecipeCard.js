@@ -14,7 +14,7 @@ class RecipeCard extends Component {
 
     render() {
         return (
-            <div>
+            <div >
                 {this.props.recipe.title}
             </div>
         )
