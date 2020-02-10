@@ -1,16 +1,38 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import MainPage from './components/MainPage'
 
 class App extends Component  {
 
-  
+  state = {
+    allRecipes: [],
+    myRecipes: []
+  } 
+
+
+  componentDidMount(){
+    this.fetchRecipes()
+  }
+
+  fetchRecipes = () => {
+    fetch('http://localhost:3000/recipes')
+    .then(res => res.json())
+    .then(data => this.setState({allRecipes: data}))
+  }
+
+
+
+
   
   render(){
     return (
-          <p>
-            Testing
-          </p>
+          <div>
+            {/* <NavBar /> 
+            <MyPage />  */}
+            <MainPage recipes={this.state.allRecipes} />
+          </div>
+        
     );
   }
 }
