@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import RecipeCard from '../components/RecipeCard'
 
+// import { Grid } from 'semantic-ui-react'
+
 
 class CardContainer extends Component {
 
@@ -20,6 +22,7 @@ class CardContainer extends Component {
     render() {
         return (
             <div>
+        
                 {this.renderCards()}
             </div>
         )
