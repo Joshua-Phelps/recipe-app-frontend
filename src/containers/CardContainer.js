@@ -8,13 +8,16 @@ class CardContainer extends Component {
     //// map over card and display them 
 
     renderCards = () => {
-        return this.props.recipes.map(recipe => {
-            return (
-            <div>
-                <RecipeCard recipe={recipe}  />
-            </div>
-            )
-        })
+        console.log(this.props.recipes)
+        if (this.props.recipes !== undefined){
+            return this.props.recipes.map(recipe => {
+                return (
+                <div>
+                    <RecipeCard recipe={recipe.recipe} ingredients={recipe.ingredients}  />
+                </div>
+                )
+            })
+        }
     }
 
     render() {

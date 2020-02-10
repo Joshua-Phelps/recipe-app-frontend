@@ -9,12 +9,13 @@ class App extends Component  {
   state = {
     allRecipes: [],
     myRecipes: [],
-    user: null 
+    user: null
   } 
 
 
   componentDidMount(){
-    this.fetchRecipes()
+    // this.fetchRecipes()
+    this.fetchMyRecipes()
   }
 
   fetchRecipes = () => {
@@ -24,21 +25,31 @@ class App extends Component  {
   }
 
   fetchMyRecipes = () => {
-    fetch(`http://localhost:3000/recipes/${this.state.user.id}`)
+    return fetch(`http://localhost:3000/users/1`)
     .then(res => res.json())
-    .then(data => this.setState({allRecipes: data}))
+    .then(data => this.setState({myRecipes: data}))
   }
-  
 
 
+
+  // getOwnedRecipes = () => {
+  //   console.log(this.state.myRecipes.user_recipes)
+  //   let rec = this.state.myRecipes.user_recipies.filter(recipe => !recipe.favorite)
+  //   console.log(rec)
+  // }
+
+  // getFavoriteRecipes = () => {
+  //   let rec = this.state.myRecipes.filter(recipe => recipe.favorite)
+  //   console.log(rec)
+  // }
 
   
   render(){
     return (
           <div>
             {/* <NavBar />  */}
-            <MyPage /> 
-            <MainPage recipes={this.state.allRecipes} />
+            <MyPage favoriteRecipes={this.state.myRecipes.favorite_recipes} ownedRecipes={this.state.myRecipes.owned_recipes} /> 
+            {/* <MainPage recipes={this.state.allRecipes} /> */}
           </div>
         
     );
