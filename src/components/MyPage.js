@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import CardContainer from '../containers/CardContainer'
 
-class MainPage extends Component {
+class MyPage extends Component {
+
 
 
 
     render() {
         return (
             <div>
-                <CardContainer recipes={this.props.recipes} />
+                {/* <CardContainer recipes={this.props.recipes} /> */}
             </div>
         )
     }
 
 }
 
-export default MainPage
+export default MyPage

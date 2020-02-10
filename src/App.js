@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import MainPage from './components/MainPage';
 import 'semantic-ui-css/semantic.min.css';
+
+import MainPage from './components/MainPage'
+import MyPage from './components/MyPage'
 
 class App extends Component  {
 
   state = {
     allRecipes: [],
-    myRecipes: []
+    myRecipes: [],
+    user: null 
   } 
 
 
@@ -22,6 +25,12 @@ class App extends Component  {
     .then(data => this.setState({allRecipes: data}))
   }
 
+  fetchMyRecipes = () => {
+    fetch(`http://localhost:3000/recipes/${this.state.user.id}`)
+    .then(res => res.json())
+    .then(data => this.setState({allRecipes: data}))
+  }
+  
 
 
 
@@ -29,8 +38,8 @@ class App extends Component  {
   render(){
     return (
           <div>
-            {/* <NavBar /> 
-            <MyPage />  */}
+            {/* <NavBar />  */}
+            <MyPage /> 
             <MainPage recipes={this.state.allRecipes} />
           </div>
         
