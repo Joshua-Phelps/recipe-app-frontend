@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Image, Grid } from 'semantic-ui-react'
+import { Card } from 'semantic-ui-react'
 
 class RecipeCard extends Component {
 
@@ -21,9 +21,11 @@ handleShowDetails = () => {
         let { recipe } = this.props.recipe
         let { ingredients } = this.props.recipe
         return (
-            <div onClick={() => this.handleShowDetails()} padding-right= "10px">
-                <Card raised image={recipe.img} header={recipe.title} />
-            </div>
+            
+                <div className="cards" onClick={() => this.handleShowDetails()} >
+                    <Card raised image={recipe.img} header={recipe.title} />
+                </div>
+            
         )
     }
 }
