@@ -7,6 +7,7 @@ import './App.css';
 import MainPage from './components/MainPage'
 import MyPage from './components/MyPage'
 import Details from './components/Details'
+import NavBar from './components/NavBar'
 
 class App extends Component  {
 
@@ -19,7 +20,7 @@ class App extends Component  {
 
 
   componentDidMount(){
-    // this.fetchRecipes()
+    this.fetchRecipes()
     this.fetchMyRecipes()
   }
 
@@ -38,15 +39,12 @@ class App extends Component  {
   showDetails = recipe => {
     this.setState({selectedRecipe: recipe})
   }
-
-  
-
-
   
   render(){
     return (
           <div>
-            {/* <NavBar />  */}
+            {/* {console.log(this.state)} */}
+            <NavBar recipes={this.state.allRecipes}/> 
             {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
             ) : (
               <MyPage onShowDetails={this.showDetails} favoriteRecipes={this.state.myRecipes.favorite_recipes} ownedRecipes={this.state.myRecipes.owned_recipes} /> 
