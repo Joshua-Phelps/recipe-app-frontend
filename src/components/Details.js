@@ -1,18 +1,16 @@
 import React, { Component } from 'react'
-import { Item, Rating } from 'semantic-ui-react'
+import { Item, Rating} from 'semantic-ui-react'
 
 class Details extends Component {
 
     listIngredients = () => {
         return this.props.recipe.ingredients.map(ingredient => {
-            return <div class="item"><li>{ingredient.ing_name}</li></div>
+            return <div className="item"><li>{ingredient.ing_name.charAt(0).toUpperCase() + ingredient.ing_name.slice(1)}</li></div>
         })
     }
 
     render() {
         let { recipe } = this.props.recipe
-        let { ingredients } = this.props.recipe
-
         return (
         <Item.Group>
             <Item>
@@ -22,11 +20,9 @@ class Details extends Component {
             <Item>
                 <Item.Image size='medium' src={recipe.img} />
                 <Item.Content>
-                    <div class="ui bulleted list">
+                    <div className="ui bulleted list">
                         <h3>Ingredients:</h3>
-                        
                             {this.listIngredients()}
-
                     </div>
                 </Item.Content>
             </Item>
@@ -44,10 +40,14 @@ class Details extends Component {
                         <Rating icon='star' defaultRating={recipe.rating} maxRating={5} />
                     </Item.Meta><br></br>
                     <Item.Description>
-                        <h3>Directions:</h3> 
-                            {recipe.directions}
+                        <div className="ui bulleted list">
+                            <h3>Directions:</h3> 
+                                {recipe.directions.split("\n").map((direction,key) => {
+                                    return <div className="item"><li key={key}>{direction}</li></div>
+                                })}
+                        </div>
                     </Item.Description><br></br>
-                        <button class="fluid ui button">Add to My Favorites</button>
+                        <button className="fluid ui button">Add to My Favorites</button>
                 </Item.Content> <br></br>
             </Item>
 

@@ -15,7 +15,8 @@ class App extends Component  {
     allRecipes: [],
     myRecipes: false,
     user: null, 
-    selectedRecipe: false 
+    selectedRecipe: false,
+    filtered: [] 
   } 
 
 
@@ -36,15 +37,39 @@ class App extends Component  {
     .then(data => this.setState({myRecipes: data}))
   }
 
+  // removeBots = (selectedBot) => {
+  //   this.setState({
+  //     myBots: this.state.myBots.filter(item => item !== selectedBot)
+  //   })
+  // }
+
+  // if (this.state.filtered) {
+  //   return this.state.hogs.filter(hog => hog.greased)
+  // } else {
+  //   return this.state.hogs
+  // }
+
+  handleCategorySelect = () => {
+    console.log("Category Selected")
+  }
+
   showDetails = recipe => {
     this.setState({selectedRecipe: recipe})
+  }
+
+  filterAllRecipes = (type='', value='all') => {
+    if (value !== 'all'){
+      return this.state.allRecipes.filter(recipe => recipe[type] === value)
+    } else {
+      return this.state.allRecipes
+    }
   }
   
   render(){
     return (
           <div>
             {/* {console.log(this.state)} */}
-            <NavBar recipes={this.state.allRecipes}/> 
+            <NavBar recipes={this.state.allRecipes} filterAllRecipes={this.filterAllRecipes}/> 
             {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
             ) : (
               <MyPage onShowDetails={this.showDetails} favoriteRecipes={this.state.myRecipes.favorite_recipes} ownedRecipes={this.state.myRecipes.owned_recipes} /> 
