@@ -49,7 +49,7 @@ class MyPage extends Component {
                 <Segment attached='bottom'>
                     {(this.state.activeItem === 'My Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails}  recipes={this.props.ownedRecipes} /> : null }
                     {(this.state.activeItem === 'Favorite Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails} recipes={this.props.favoriteRecipes} /> : null }
-                    {(this.state.activeItem === 'Add Recipes') ? <RecipeForm /> : null }
+                    {(this.state.activeItem === 'Add Recipes') ? <RecipeForm onMakeNewRecipe={this.props.onMakeNewRecipe} /> : null }
                 </Segment>
 
             </div>

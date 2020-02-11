@@ -39,6 +39,25 @@ class App extends Component  {
   showDetails = recipe => {
     this.setState({selectedRecipe: recipe})
   }
+
+  makeNewRecipe = recipeInfo => {
+    fetch(`http://localhost:3000/recipes`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify(recipeInfo)
+    }).then(res => res.json())
+    .then(data => this.setState(prevState => ({
+      allRecipes: [...prevState.allRecipes, data],
+      myRecipes: {
+        favorite_recipes: prevState.myRecipes.favorite_recipes,
+        owned_recipes: [...prevState.myRecipes.owned_recipes, data]
+      }
+    })))
+    // .then(data => console.log(data))
+  }
   
   render(){
     return (
@@ -47,7 +66,7 @@ class App extends Component  {
             <NavBar recipes={this.state.allRecipes}/> 
             {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
             ) : (
-              <MyPage onShowDetails={this.showDetails} favoriteRecipes={this.state.myRecipes.favorite_recipes} ownedRecipes={this.state.myRecipes.owned_recipes} /> 
+              <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={this.state.myRecipes.favorite_recipes} ownedRecipes={this.state.myRecipes.owned_recipes} /> 
               // <MainPage recipes={this.state.allRecipes} />
               )} 
           </div>

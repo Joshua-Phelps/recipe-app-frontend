@@ -8,6 +8,7 @@ class AddIngredientForm extends Component {
         return (
             this.props.ingredients.map((val, idx)=> {
               let ingId = `ing-${idx}`
+              let amountId = `amountId-${idx}`
               return (
                 <div key={idx}>
                   <label htmlFor={ingId}>{`Ingredient #${idx + 1}`}</label>
@@ -18,6 +19,15 @@ class AddIngredientForm extends Component {
                     id={ingId}
                     value={this.props.ingredients[idx].ingName} 
                     className="ingName"
+                  />
+                  <label htmlFor={amountId}>{`Amount`}</label>
+                  <input
+                    type="text"
+                    name={amountId}
+                    data-id={idx}
+                    id={amountId}
+                    value={this.props.ingredients[idx].amount} 
+                    className="amount"
                   />
                 </div>
               )
