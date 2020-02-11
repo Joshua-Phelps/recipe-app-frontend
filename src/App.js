@@ -15,7 +15,8 @@ class App extends Component  {
     allRecipes: [],
     myRecipes: false,
     user: null, 
-    selectedRecipe: false 
+    selectedRecipe: false,
+    filtered: [] 
   } 
 
 
@@ -34,6 +35,22 @@ class App extends Component  {
     return fetch(`http://localhost:3000/users/1`)
     .then(res => res.json())
     .then(data => this.setState({myRecipes: data}))
+  }
+
+  // removeBots = (selectedBot) => {
+  //   this.setState({
+  //     myBots: this.state.myBots.filter(item => item !== selectedBot)
+  //   })
+  // }
+
+  // if (this.state.filtered) {
+  //   return this.state.hogs.filter(hog => hog.greased)
+  // } else {
+  //   return this.state.hogs
+  // }
+
+  handleCategorySelect = () => {
+    console.log("Category Selected")
   }
 
   showDetails = recipe => {
@@ -63,7 +80,7 @@ class App extends Component  {
     return (
           <div>
             {/* {console.log(this.state)} */}
-            <NavBar recipes={this.state.allRecipes}/> 
+            <NavBar recipes={this.state.allRecipes} filterAllRecipes={this.filterAllRecipes}/> 
             {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
             ) : (
               <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={this.state.myRecipes.favorite_recipes} ownedRecipes={this.state.myRecipes.owned_recipes} /> 
