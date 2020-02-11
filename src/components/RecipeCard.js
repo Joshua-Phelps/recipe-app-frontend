@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Card, Image, Grid } from 'semantic-ui-react'
 
-
-
 class RecipeCard extends Component {
 
 ///displays recipe info 
@@ -28,7 +26,6 @@ handleShowDetails = () => {
             </div>
         )
     }
-
 }
 
 export default RecipeCard
