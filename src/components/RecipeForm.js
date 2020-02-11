@@ -88,7 +88,7 @@ class RecipeForm extends Component {
 
             <lable style={{ paddingRight:"10px" }} >
                 Category:{' '}
-                <Dropdown name="category" value={this.state.category} onChange={this.handleCategoryChange} options={categories} placeholder='Choose Category' />
+                <Dropdown name="category" value={this.state.category} onSelect={this.handleCategoryChange} options={categories} placeholder='Choose Category' />
             </lable>
 
             </Form.Group>

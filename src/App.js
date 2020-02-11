@@ -15,7 +15,8 @@ class App extends Component  {
     allRecipes: [],
     myRecipes: false,
     user: null, 
-    selectedRecipe: false 
+    selectedRecipe: false,
+    search: ''
   } 
 
 
@@ -33,7 +34,7 @@ class App extends Component  {
   fetchMyRecipes = () => {
     return fetch(`http://localhost:3000/users/1`)
     .then(res => res.json())
-    .then(data => this.setState({myRecipes: data}))
+    .then(data => this.setState({myRecipes: data }))
   }
 
   showDetails = recipe => {
@@ -58,16 +59,27 @@ class App extends Component  {
     })))
     // .then(data => console.log(data))
   }
+
+  updateSearch = e => {
+    this.setState({ search: e.target.value})
+  }
+
   
   render(){
+
+    const allRecipes = this.state.allRecipes.filter(r => r.recipe.title.includes(this.state.search))
+    const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r => r.recipe.title.includes(this.state.search))
+    const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r => r.recipe.title.includes(this.state.search))
+
+
     return (
           <div>
             {/* {console.log(this.state)} */}
-            <NavBar recipes={this.state.allRecipes}/> 
+            <NavBar recipes={this.state.allRecipes} search={this.state.search} onSearch={this.updateSearch}/> 
             {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
             ) : (
-              <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={this.state.myRecipes.favorite_recipes} ownedRecipes={this.state.myRecipes.owned_recipes} /> 
-              // <MainPage recipes={this.state.allRecipes} />
+              <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} /> 
+              // <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
               )} 
           </div>
         

@@ -9,7 +9,7 @@ class MainPage extends Component {
     render() {
         return (
             <div>
-                <CardContainer recipes={this.props.recipes} />
+                <CardContainer onShowDetails={this.props.onShowDetails} recipes={this.props.recipes} /> 
             </div>
         )
     }

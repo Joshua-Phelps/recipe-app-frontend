@@ -9,6 +9,10 @@ class NavBar extends Component{
     let uniqCats = categories.filter((v, i, a) => a.indexOf(v) === i); 
     console.log(uniqCats)
   }
+
+  handleChange = e => {
+    this.props.onSearch(e)
+  }
   
 
   render() {
@@ -45,7 +49,7 @@ class NavBar extends Component{
           </Dropdown>
           
           <Menu.Item>
-            <Input className='icon' icon='search'  placeholder='Search...' />
+            <Input className='icon' value={this.props.search} icon='search' onChange={this.handleChange}  placeholder='Search...' />
           </Menu.Item>
           
         <div className="right menu">
