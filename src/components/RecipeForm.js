@@ -24,8 +24,12 @@ class RecipeForm extends Component {
             ingredients[e.target.dataset.id][e.target.className] = e.target.value
             this.setState({ ingredients }, () => console.log(this.state.ingredients))
         } else {
-                this.setState({ [e.target.name]: e.target.value })
-        }
+            this.setState({ [e.target.name]: e.target.value })
+        } 
+    }
+
+    handleCategoryChange = (e, value) => {
+        this.setState({ category: value.value })
     }
 
     addIngredientInput = (e) => {
@@ -43,11 +47,21 @@ class RecipeForm extends Component {
     render() {
         const { title, image, area, category, directions, ingredients } = this.state
         const categories = [
-            { key: 1, text: 'Choice 1', value: 1 },
-            { key: 2, text: 'Choice 2', value: 2 },
-            { key: 3, text: 'Choice 3', value: 3 },
+            { key: 1, text: 'Vegetarian', value: 'Vegetarian' },
+            { key: 2, text: 'Dessert', value: 'Dessert' },
+            { key: 3, text: 'Beef', value: 'Beef' },
+            { key: 4, text: 'Starter', value: 'Starter' },
+            { key: 5, text: 'Breakfast', value: 'Breakfast' },
+            { key: 6, text: 'Seafood', value: 'Seafood' },
+            { key: 7, text: 'Miscellaneous', value: 'Miscellaneous' },
+            { key: 8, text: 'Side', value: 'Side' },
+            { key: 9, text: 'Chicken', value: 'Chicken' },
+            { key: 10, text: 'Pasta', value: 'Pasta' },
+            { key: 11, text: 'Pork', value: 'Pork' },
+            { key: 12, text: 'Lamb', value: 'Lamb' },
+            { key: 13, text: 'Goat', value: 'Goat' },
+            { key: 14, text: 'Vegan', value: 'Vegan' },
         ]
-
 
         return (
           <Form onSubmit={e => this.handleSubmit(e)} onChange={this.handleChange}>
@@ -74,7 +88,7 @@ class RecipeForm extends Component {
 
             <lable style={{ paddingRight:"10px" }} >
                 Category:{' '}
-                <Dropdown name="category" options={categories} placeholder='Choose Category' />
+                <Dropdown name="category" value={this.state.category} onChange={this.handleCategoryChange} options={categories} placeholder='Choose Category' />
             </lable>
 
             </Form.Group>
