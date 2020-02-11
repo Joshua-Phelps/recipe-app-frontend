@@ -3,20 +3,20 @@ import { Menu, Dropdown, Input, Button, Sticky } from 'semantic-ui-react'
 
 class NavBar extends Component{
 
-  mapCategories = () => {
-    // console.log(this.props)
+  uniqCategories = () => {
     const categories = this.props.recipes.map(recipe => {
-      return recipe.category
-    })
-    console.log(categories)
+      return recipe.category})
+    let uniqCats = categories.filter((v, i, a) => a.indexOf(v) === i); 
+    console.log(uniqCats)
   }
-
   
 
   render() {
+    // console.log(this.props)
+    
+
     return(
       <div className="nav-bar"> 
-      {this.mapCategories()}
       {/* {console.log(this.props.recipes)} */}
       <Sticky >                                                                 
         <Menu
@@ -26,10 +26,10 @@ class NavBar extends Component{
           style={{ backgroundColor: '#fff', paddingTop: '1em' }}>         
           <Dropdown item text='Sort By Area'>
             <Dropdown.Menu>
-              {/* <Dropdown.Item>{mapCategories()}</Dropdown.Item> */}
-              <Dropdown.Item>Turkish</Dropdown.Item>
-              <Dropdown.Item>Irish</Dropdown.Item>
-              <Dropdown.Item>Russian</Dropdown.Item>
+              
+                <Dropdown.Item>{this.uniqCategories()}</Dropdown.Item>
+            
+             
             </Dropdown.Menu>
           </Dropdown>
           
