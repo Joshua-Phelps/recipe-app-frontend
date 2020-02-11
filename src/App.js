@@ -37,6 +37,22 @@ class App extends Component  {
     .then(data => this.setState({myRecipes: data }))
   }
 
+  // removeBots = (selectedBot) => {
+  //   this.setState({
+  //     myBots: this.state.myBots.filter(item => item !== selectedBot)
+  //   })
+  // }
+
+  // if (this.state.filtered) {
+  //   return this.state.hogs.filter(hog => hog.greased)
+  // } else {
+  //   return this.state.hogs
+  // }
+
+  handleCategorySelect = () => {
+    console.log("Category Selected")
+  }
+
   showDetails = recipe => {
     this.setState({selectedRecipe: recipe})
   }
