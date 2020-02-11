@@ -16,7 +16,7 @@ class CardContainer extends Component {
         if (this.props.recipes !== undefined){
             return this.props.recipes.map(recipe => {
                 return (
-                <div>
+                <div style={{ paddingRight:"10px", paddingTop:"10px" }}>
                     <RecipeCard onShowDetails={this.props.onShowDetails}  recipe={recipe} />
                 </div>
                 )
@@ -27,7 +27,11 @@ class CardContainer extends Component {
     render() {
         return (
             <div>
-            <Card.Group itemsPerRow={3}>
+            <Card.Group style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }} >
                     {this.renderCards()}
             </Card.Group>
 

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import CardContainer from '../containers/CardContainer'
 import RecipeCard from './RecipeCard'
 import { Input, Menu, Segment } from 'semantic-ui-react'
+import RecipeForm from './RecipeForm'
+
 
 class MyPage extends Component {
 
@@ -47,7 +49,7 @@ class MyPage extends Component {
                 <Segment attached='bottom'>
                     {(this.state.activeItem === 'My Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails}  recipes={this.props.ownedRecipes} /> : null }
                     {(this.state.activeItem === 'Favorite Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails} recipes={this.props.favoriteRecipes} /> : null }
-                    {(this.state.activeItem === 'Add Recipes') ? 'Recipe Form' : null }
+                    {(this.state.activeItem === 'Add Recipes') ? <RecipeForm /> : null }
                 </Segment>
 
             </div>
