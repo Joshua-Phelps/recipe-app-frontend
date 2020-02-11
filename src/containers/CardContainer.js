@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import RecipeCard from '../components/RecipeCard'
-import { Card, Grid } from 'semantic-ui-react'
-
-
-// import { Grid } from 'semantic-ui-react'
+import { Card, Grid, Container } from 'semantic-ui-react'
 
 
 class CardContainer extends Component {
@@ -27,13 +24,15 @@ class CardContainer extends Component {
     render() {
         return (
             <div>
+                <Container>
             <Card.Group style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
             }} >
                     {this.renderCards()}
             </Card.Group>
+                </Container>
 
             </div>
         )

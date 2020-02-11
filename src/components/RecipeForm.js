@@ -1,20 +1,7 @@
 import React, { Component } from 'react'
 import AddIngredientForm from './AddIngredientForm'
-import {
-    Button,
-    Checkbox,
-    Form,
-    Input,
-    Radio,
-    Select,
-    TextArea,
-  } from 'semantic-ui-react'
+import { Button, Form } from 'semantic-ui-react'
 
-  const options = [
-    { key: 'm', text: 'Male', value: 'male' },
-    { key: 'f', text: 'Female', value: 'female' },
-    { key: 'o', text: 'Other', value: 'other' },
-  ]
 
 
 class RecipeForm extends Component {
@@ -22,67 +9,74 @@ class RecipeForm extends Component {
     constructor(){
         super()
         this.state = {
-            ingredientInputs: ['input-0'],
-
+            title: '',
+            image: '',
+            region: '',
+            type: '',
+            directions: '',
+            ingredients: [{ingName: ''}]
         }
     }
 
-    // handleChange = (e, { value }) => this.setState({ value })
-
     handleChange = (e) => {
-        console.log(e.target.value)
-        // this.setState({ 
-             
-        // })
-    }    
+        if (e.target.className === 'ingName' ){
+            let ingredients = [...this.state.ingredients]
+            ingredients[e.target.dataset.id][e.target.className] = e.target.value
+            this.setState({ ingredients }, () => console.log(this.state.ingredients))
+        } else {
+                this.setState({ [e.target.name]: e.target.value })
+        
+        }
+    }
 
-    appendInput() {
-        let newInput = `input-${this.state.ingredientInputs.length}`;
-        this.setState(prevState => ({ ingredientInputs: prevState.ingredientInputs.concat([newInput]) }));
+    addIngredientInput = (e) => {
+        this.setState((prevState) => ({
+          ingredients: [...prevState.ingredients, {ingName: "" }],
+        }));
     }
 
     render() {
-        const { value } = this.state
+        const { title, image, region, type, directions, ingredients } = this.state
         return (
-          <Form>
+          <Form onChange={this.handleChange}>
             <Form.Group widths='equal'>
-              <lable style={{ paddingRight:"10px" }} >
-                  title:
-                  <input type="text" name="title" placeholder='Title' />
-              </lable>
-              
-              <lable style={{ paddingRight:"10px" }}>
-                  Image:
-                  <input type="text" name="image" placeholder='Image' />
-              </lable>
+            <lable style={{ paddingRight:"10px" }} >
+                Title:
+                <input type="text" value={title} name="title" placeholder='Title' />
+            </lable>
+            
+            <lable style={{ paddingRight:"10px" }}>
+                Image:
+                <input type="text" name="image" value={image} placeholder='Image' />
+            </lable>
 
-              <lable style={{ paddingRight:"10px" }} >
-                  Region:
-                  <input type="text" name="region" placeholder='region' />
-              </lable>
+            <lable style={{ paddingRight:"10px" }} >
+                Region:
+                <input type="text" name="region" value={region} placeholder='region' />
+            </lable>
 
-              <lable style={{ paddingRight:"10px" }} >
-                  Type:
-                  <input type="text" name="image" placeholder='e.g. breakfast' />
-              </lable>
+            <lable style={{ paddingRight:"10px" }} >
+                Type:
+                <input type="text" name="type" value={type} placeholder='e.g. breakfast' />
+            </lable>
+
             </Form.Group>
-            <Form>
-                <div id="dynamicInput">
-                    {this.state.ingredientInputs.map(input => <AddIngredientForm key={input} />)}
-                </div>
-            </Form>
-                <button onClick={ () => this.appendInput() }>
-                    Add Ingredient 
-                </button>
-            <Form.Field
-              control={TextArea}
-              label='Directions'
-              placeholder='Directions'
-            />
+            
+            <lable style={{ paddingRight:"10px" }} >
+                  Type:
+                  <textarea name="directions" value={directions} placeholder='Directions' />
+            </lable>
+
+            <Form.Group widths='equal'>
+                <button onClick={this.addIngredientInput}>Add Ingredient</button>
+                <AddIngredientForm ingredients={ingredients} />
+            </Form.Group>
+
+                <br></br>
             <Form.Field control={Button}>Submit</Form.Field>
-          </Form>
+            </Form>
         )
-      }
+    }
 
 }
 
