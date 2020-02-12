@@ -80,7 +80,7 @@ class NavBar extends Component{
             </Menu.Item>
 
             <Menu.Item floated='right'>
-              <Button primary ><Link to="/my-page">Log In</Link></Button>
+              <Button primary ><Link to="/login">Log In</Link></Button>
             </Menu.Item>
         </Menu>
               </div>

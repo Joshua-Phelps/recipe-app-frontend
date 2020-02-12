@@ -101,9 +101,6 @@ class App extends Component  {
           console.log(data)
         }
       })
-      // .catch(err => {
-      //   console.log(err)
-      // })
   }
 
   login = (userInfo) => {
@@ -153,7 +150,7 @@ class App extends Component  {
           <Route 
             path="/recipe-details/:id"
             exact
-            render={(props) => <Details {...props} recipes={this.state.allRecipes} />
+            render={(props) => <Details {...props} recipes={this.state.allRecipes} onFavorites={this.addToFavorites}  />
             }
           />
           <Route 

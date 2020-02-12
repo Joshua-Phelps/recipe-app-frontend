@@ -92,10 +92,6 @@ class Details extends Component {
                             <Rating icon='star' defaultRating={rating} maxRating={5} />
                         </Item.Meta><br></br>
 
-                    </Item.Description><br></br>
-                        <button className="fluid ui button" onClick={() => {this.props.onFavorites(this.props.recipe.recipe.id, 3)}}>Add to My Favorites</button>
-                </Item.Content> <br></br>
-            </Item>
 
                         <Item.Description>
                             <div className="ui bulleted list">
@@ -104,10 +100,17 @@ class Details extends Component {
                                         return <div className="item"><li key={key}>{direction}</li></div>
                                     })}
                             </div>
-                        </Item.Description><br></br>
+
+                    </Item.Description><br></br>
+                        <button className="fluid ui button" onClick={() => {this.props.onFavorites(id, JSON.parse(localStorage.getItem('user')).id)}}>Add to My Favorites</button>
+                        </Item.Content> <br></br>
+                        </Item>
+
+
+                        {/* </Item.Description><br></br>
                             <button className="fluid ui button">Add to My Favorites</button>
                     </Item.Content> <br></br>
-                </Item>
+                </Item> */}
         </Item.Group>
         </> 
         )
