@@ -16,7 +16,8 @@ class App extends Component  {
     myRecipes: false,
     user: null, 
     selectedRecipe: false,
-    filtered: [] 
+    filtered: [],
+    search: '' 
   } 
 
 
@@ -91,7 +92,7 @@ class App extends Component  {
     return (
           <div>
             {/* {console.log(this.state)} */}
-            <NavBar recipes={this.state.allRecipes} filterAllRecipes={this.filterAllRecipes}/> 
+            <NavBar recipes={this.state.allRecipes} search={this.state.search} onSearch={this.updateSearch}/> 
             {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
             ) : (
               <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} /> 
