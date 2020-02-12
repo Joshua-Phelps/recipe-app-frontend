@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Item, Rating } from 'semantic-ui-react'
+import { Item, Rating, Button } from 'semantic-ui-react'
 import { Redirect } from "react-router-dom";
 import { Link } from 'react-router-dom';
 
@@ -74,6 +74,8 @@ class Details extends Component {
                                 {/* {this.listIngredients()} */}
                                 {this.renderIngredients(this.getRecipes())}
                         </div>
+                        
+                    <Button onClick={null} >Edit</Button>
                     </Item.Content>
                 </Item>
 

@@ -12,6 +12,7 @@ class LoginForm extends Component {
     }
 
     handleLogin = () => {
+        // this.props.fetchRecipes(this.props.onLogin(this.state))
         this.props.onLogin(this.state)
     }
 
