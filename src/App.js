@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
 // import 'semantic-ui-css/semantic.min.css';
 
 import { BrowserRouter as Router, Route } from 'react-router-dom';
@@ -17,49 +16,36 @@ class App extends Component  {
 
   state = {
     allRecipes: [],
-    myRecipes: { owned_recipes: [], favorite_recipes: []},
-    user: null, 
+    myRecipes: { owned_recipes: [], favorite_recipes: [] },
+    user: null,
     selectedRecipe: false,
     filtered: [],
-    search: '' 
-  } 
+    search: ''
+  }
 
-
-  componentDidMount(){
+  componentDidMount() {
     this.fetchRecipes()
     this.fetchMyRecipes()
   }
 
   fetchRecipes = () => {
     fetch('http://localhost:3000/recipes')
-    .then(res => res.json())
-    .then(data => this.setState({allRecipes: data}))
+      .then(res => res.json())
+      .then(data => this.setState({ allRecipes: data }))
   }
 
   fetchMyRecipes = () => {
-    return fetch(`http://localhost:3000/users/1`)
-    .then(res => res.json())
-    .then(data => this.setState({myRecipes: data }))
+    return fetch(`http://localhost:3000/users/2`)
+      .then(res => res.json())
+      .then(data => this.setState({ myRecipes: data }))
   }
-
-  // removeBots = (selectedBot) => {
-  //   this.setState({
-  //     myBots: this.state.myBots.filter(item => item !== selectedBot)
-  //   })
-  // }
-
-  // if (this.state.filtered) {
-  //   return this.state.hogs.filter(hog => hog.greased)
-  // } else {
-  //   return this.state.hogs
-  // }
 
   handleCategorySelect = () => {
     console.log("Category Selected")
   }
 
   showDetails = recipe => {
-    this.setState({selectedRecipe: recipe})
+    this.setState({ selectedRecipe: recipe })
   }
 
   makeNewRecipe = recipeInfo => {
@@ -71,29 +57,58 @@ class App extends Component  {
       },
       body: JSON.stringify(recipeInfo)
     }).then(res => res.json())
-    .then(data => this.setState(prevState => ({
-      allRecipes: [...prevState.allRecipes, data],
-      myRecipes: {
-        favorite_recipes: prevState.myRecipes.favorite_recipes,
-        owned_recipes: [...prevState.myRecipes.owned_recipes, data]
-      }
-    })))
+      .then(data => this.setState(prevState => ({
+        allRecipes: [...prevState.allRecipes, data],
+        myRecipes: {
+          favorite_recipes: prevState.myRecipes.favorite_recipes,
+          owned_recipes: [...prevState.myRecipes.owned_recipes, data]
+        }
+      })))
     // .then(data => console.log(data))
   }
 
   updateSearch = e => {
-    this.setState({ search: e.target.value})
+    this.setState({ search: e.target.value })
   }
 
-  
-  render(){
+  addToFavorites = (recipeId, userId) => {
+    console.log(recipeId, userId)
+    fetch(`http://localhost:3000/user_recipes`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        recipe_id: recipeId,
+        user_id: userId
+      })
+    }).then(res => res.json())
+      .then(data => {
+        if (!data.error) {
+          this.setState(prevState => ({
+            myRecipes: {
+              favorite_recipes: [...prevState.myRecipes.favorite_recipes, data],
+              owned_recipes: prevState.myRecipes.owned_recipes
+            }
+          }))
+        } else {
+          console.log(data)
+        }
+      })
+      // .catch(err => {
+      //   console.log(err)
+      // })
+  }
 
-    console.log("here", this.state.myRecipes.owned_recipes)
+  render() {
+
+    console.log("owned", this.state.myRecipes.owned_recipes)
+    console.log("favorite", this.state.myRecipes.favorite_recipes)
 
     const allRecipes = this.state.allRecipes.filter(r => r.recipe.title.includes(this.state.search))
     const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r => r.recipe.title.includes(this.state.search))
     const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r => r.recipe.title.includes(this.state.search))
-
 
     return (
       <Router>
@@ -127,6 +142,16 @@ class App extends Component  {
               
             //   )} 
         
+      <div>
+        {/* {console.log(this.state)} */}
+        <NavBar recipes={this.state.allRecipes} search={this.state.search} onSearch={this.updateSearch} />
+        {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe} onFavorites={this.addToFavorites} />
+        ) : (
+            <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} />
+            // <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
+
+          )}
+      </div>
     );
   }
 }
@@ -139,13 +164,13 @@ export default App;
             //   .then(res => res.json())
             //   .then(data => this.mapRecipes(data.meals))
             // }
-          
+
             // mapRecipes = recipes => {
             //   recipes.map(recipe => {
             //     this.postRecipe(recipe)
             //   })
             // }
-          
+
             // postRecipe = recipe => {
             //   fetch('http://localhost:3000/recipes', {
             //     method: 'POST',
@@ -186,20 +211,19 @@ export default App;
             // }
 
 
-
 // // ////// ***** these methods get recipes form database and post to our database ***********
 //           fetchRecipes = () => {
 //             fetch('https://www.themealdb.com/api/json/v1/1/search.php?f=y')
 //             .then(res => res.json())
 //             .then(data => this.mapRecipes(data.meals))
 //           }
-        
+
 //           mapRecipes = recipes => {
 //             recipes.map(recipe => {
 //               this.postRecipe(recipe)
 //             })
 //           }
-        
+
 //           postRecipe = recipe => {
 //             fetch('http://localhost:3000/recipes', {
 //               method: 'POST',

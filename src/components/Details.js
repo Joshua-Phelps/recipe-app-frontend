@@ -107,6 +107,10 @@ class Details extends Component {
                             <Rating icon='star' defaultRating={rating} maxRating={5} />
                         </Item.Meta><br></br>
 
+                    </Item.Description><br></br>
+                        <button className="fluid ui button" onClick={() => {this.props.onFavorites(this.props.recipe.recipe.id, 3)}}>Add to My Favorites</button>
+                </Item.Content> <br></br>
+            </Item>
 
                         <Item.Description>
                             <div className="ui bulleted list">
