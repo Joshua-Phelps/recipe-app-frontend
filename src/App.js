@@ -11,6 +11,7 @@ import Details from './components/Details'
 import NavBar from './components/NavBar'
 
 import Login from './Login';
+import LoginForm from './components/LoginForm';
 
 class App extends Component  {
 
@@ -25,7 +26,9 @@ class App extends Component  {
 
   componentDidMount() {
     this.fetchRecipes()
-    this.fetchMyRecipes()
+    if (JSON.parse(localStorage.getItem('user')).id){
+      this.fetchMyRecipes(JSON.parse(localStorage.getItem('user')).id)
+    }
   }
 
   fetchRecipes = () => {
@@ -34,10 +37,11 @@ class App extends Component  {
       .then(data => this.setState({ allRecipes: data }))
   }
 
-  fetchMyRecipes = () => {
-    return fetch(`http://localhost:3000/users/2`)
-      .then(res => res.json())
-      .then(data => this.setState({ myRecipes: data }))
+  fetchMyRecipes = id => {
+    return fetch(`http://localhost:3000/users/${id}`)
+    .then(res => res.json())
+
+    .then(data => this.setState({myRecipes: { owned_recipes: data.owned_recipes, favorite_recipes: data.favorite_recipes}}))
   }
 
   handleCategorySelect = () => {
@@ -66,6 +70,7 @@ class App extends Component  {
       })))
     // .then(data => console.log(data))
   }
+
 
   updateSearch = e => {
     this.setState({ search: e.target.value })
@@ -101,7 +106,24 @@ class App extends Component  {
       // })
   }
 
-  render() {
+  login = (userInfo) => {
+    console.log(userInfo)
+    fetch('http://localhost:3000/login', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify(userInfo)
+    })
+    .then(res => res.json())
+    .then(json => localStorage.setItem('user', JSON.stringify(json)))
+    .then(this.fetchMyRecipes(JSON.parse(localStorage.getItem('user')).id))
+    // .then(this.fetchMyRecipes(localStorage.getItem(user['id'])))
+  }
+
+  
+  render(){
 
     console.log("owned", this.state.myRecipes.owned_recipes)
     console.log("favorite", this.state.myRecipes.favorite_recipes)
@@ -134,6 +156,12 @@ class App extends Component  {
             render={(props) => <Details {...props} recipes={this.state.allRecipes} />
             }
           />
+          <Route 
+            path="/login"
+            exact
+            render={(props) => <LoginForm {...props} onLogin={this.login} />
+            }
+          />
           
       </Router>
             // {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
@@ -142,16 +170,16 @@ class App extends Component  {
               
             //   )} 
         
-      <div>
-        {/* {console.log(this.state)} */}
-        <NavBar recipes={this.state.allRecipes} search={this.state.search} onSearch={this.updateSearch} />
-        {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe} onFavorites={this.addToFavorites} />
-        ) : (
-            <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} />
-            // <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
+      // <div>
+      //   {/* {console.log(this.state)} */}
+      //   <NavBar recipes={this.state.allRecipes} search={this.state.search} onSearch={this.updateSearch} />
+      //   {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe} onFavorites={this.addToFavorites} />
+      //   ) : (
+      //       <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} />
+      //       // <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
 
-          )}
-      </div>
+      //     )}
+      // </div>
     );
   }
 }

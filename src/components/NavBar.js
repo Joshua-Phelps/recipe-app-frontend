@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Menu, Dropdown, Input, Button, Sticky } from 'semantic-ui-react'
+import {Link} from  'react-router-dom';
 
 class NavBar extends Component{
 
@@ -71,11 +72,11 @@ class NavBar extends Component{
               <div className="right menu">
         <Menu>
             <Menu.Item floated='right'>
-              <Button >Home</Button>
+              <Button ><Link to="/">Home</Link></Button>
             </Menu.Item>
             
             <Menu.Item floated='right'>
-              <Button >My Page</Button>
+              <Button ><Link to="/my-page">My Page</Link></Button>
             </Menu.Item>
 
             <Menu.Item floated='right'>
