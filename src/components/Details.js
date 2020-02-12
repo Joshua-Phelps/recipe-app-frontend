@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Item, Rating} from 'semantic-ui-react'
+import { Item, Rating } from 'semantic-ui-react'
 
 class Details extends Component {
 
