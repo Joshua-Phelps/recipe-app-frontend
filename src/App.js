@@ -12,6 +12,7 @@ import Details from './components/Details'
 import NavBar from './components/NavBar'
 
 import Login from './Login';
+import LoginForm from './components/LoginForm';
 
 class App extends Component  {
 
@@ -81,6 +82,7 @@ class App extends Component  {
     // .then(data => console.log(data))
   }
 
+
   updateSearch = e => {
     this.setState({ search: e.target.value})
   }
@@ -117,6 +119,12 @@ class App extends Component  {
             path="/recipe-details/:id"
             exact
             render={(props) => <Details {...props} recipes={this.state.allRecipes} />
+            }
+          />
+          <Route 
+            path="/login"
+            exact
+            render={(props) => <LoginForm {...props} />
             }
           />
           

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Item, Rating } from 'semantic-ui-react'
-
 import { Redirect } from "react-router-dom";
-
 import { Link } from 'react-router-dom';
 
 
@@ -36,7 +34,6 @@ class Details extends Component {
     renderInfo = (recipeObj, attr ) => {
         console.log(recipeObj[0])
         if (recipeObj[0]){
-            // console.log(recipeObj[0].recipe.title)
             return recipeObj[0].recipe[attr]
         }
     }
@@ -44,7 +41,6 @@ class Details extends Component {
     renderIngredients = (recipeObj) => {
         console.log(recipeObj)
         if (recipeObj[0]){
-            // console.log(recipeObj[0].recipe.title)
             return recipeObj[0].ingredients.map(ing => {
                 return (<div className="item"><li>{ing.ing_name.charAt(0).toUpperCase() + ing.ing_name.slice(1)}</li></div>)
             })
@@ -53,7 +49,6 @@ class Details extends Component {
 
     render() {
         if (!this.renderInfo(this.getRecipes(), "title")){
-            {console.log("Render PROPS ", this.props.match.params.id)}
             return this.getRecipes()
         } else {
             const title = this.renderInfo(this.getRecipes(), "title")
@@ -63,16 +58,6 @@ class Details extends Component {
             const category = this.renderInfo(this.getRecipes(), "category")
             const rating = this.renderInfo(this.getRecipes(), "rating")
             const id = this.renderInfo(this.getRecipes(), "id")
-            console.log(title)
-            console.log(directions)
-            console.log(img)
-            console.log(area)
-            console.log(category)
-            console.log(rating)
-
-            // const { recipe, ingredients} = this.getRecipes();
-            // console.log("recipe", recipe)
-            // console.log("ingredients", ingredients)
             return ( 
             <> 
             <Link to={`recipe-details/${id}`} />          
