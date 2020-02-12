@@ -23,6 +23,9 @@ class Details extends Component {
                     <div className="ui bulleted list">
                         <h3>Ingredients:</h3>
                             {this.listIngredients()}
+                            <br></br>
+                            <br></br>
+                            <button>Edit Recipe</button>
                     </div>
                 </Item.Content>
             </Item>

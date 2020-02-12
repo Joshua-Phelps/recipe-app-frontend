@@ -99,7 +99,6 @@ class App extends Component  {
             ) : (
               <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} /> 
               // <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
-               
               )} 
           </div>
         
