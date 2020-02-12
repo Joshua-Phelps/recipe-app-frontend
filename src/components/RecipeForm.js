@@ -14,8 +14,9 @@ class RecipeForm extends Component {
             area: '',
             category: '',
             directions: '',
-            ingredients: [{ingName: "", amount: ""}]
-        }
+            ingredients: [{ingName: "", amount: ""},],
+            rating: 0
+        }           
     }
 
     handleChange = (e) => {
