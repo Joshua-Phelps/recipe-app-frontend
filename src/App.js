@@ -95,8 +95,8 @@ class App extends Component  {
             <NavBar recipes={this.state.allRecipes} search={this.state.search} onSearch={this.updateSearch}/> 
             {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
             ) : (
-              <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} /> 
-              // <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
+              // <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} /> 
+              <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
               )} 
           </div>
         
