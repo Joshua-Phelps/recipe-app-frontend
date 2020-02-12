@@ -11,6 +11,8 @@ import MyPage from './components/MyPage'
 import Details from './components/Details'
 import NavBar from './components/NavBar'
 
+import Login from './Login';
+
 class App extends Component  {
 
   state = {
@@ -98,7 +100,7 @@ class App extends Component  {
           {/* {console.log(this.state)} */}
           <NavBar recipes={this.state.allRecipes} search={this.state.search} onSearch={this.updateSearch}/> 
           <Route 
-            path="/main-page"
+            path="/"
             exact
             render={() => <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />}
           />
