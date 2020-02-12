@@ -47,7 +47,7 @@ class Details extends Component {
                                 })}
                         </div>
                     </Item.Description><br></br>
-                        <button className="fluid ui button">Add to My Favorites</button>
+                        <button className="fluid ui button" onClick={() => {this.props.onFavorites(this.props.recipe.recipe.id, 3)}}>Add to My Favorites</button>
                 </Item.Content> <br></br>
             </Item>
 

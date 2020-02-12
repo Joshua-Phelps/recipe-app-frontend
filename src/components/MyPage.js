@@ -4,9 +4,7 @@ import RecipeCard from './RecipeCard'
 import { Input, Menu, Segment } from 'semantic-ui-react'
 import RecipeForm from './RecipeForm'
 
-
 class MyPage extends Component {
-
 
     constructor(){
         super()
@@ -21,7 +19,6 @@ class MyPage extends Component {
         this.setState({ activeItem: name})
     }    
 
-      
     render() {
         const { activeItem } = this.state
 
