@@ -13,7 +13,7 @@ class App extends Component  {
 
   state = {
     allRecipes: [],
-    myRecipes: false,
+    myRecipes: { owned_recipes: [], favorite_recipes: []},
     user: null, 
     selectedRecipe: false,
     filtered: [],
@@ -84,7 +84,9 @@ class App extends Component  {
   
   render(){
 
-    const allRecipes = this.state.allRecipes.filter(r => r.recipe.title.includes(this.state.search))
+    console.log("here", this.state.myRecipes.owned_recipes)
+
+    // const allRecipes = this.state.allRecipes.filter(r => r.recipe.title.includes(this.state.search))
     const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r => r.recipe.title.includes(this.state.search))
     const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r => r.recipe.title.includes(this.state.search))
 
@@ -95,8 +97,9 @@ class App extends Component  {
             <NavBar recipes={this.state.allRecipes} search={this.state.search} onSearch={this.updateSearch}/> 
             {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
             ) : (
-              // <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} /> 
-              <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
+              <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} /> 
+              // <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
+               
               )} 
           </div>
         
