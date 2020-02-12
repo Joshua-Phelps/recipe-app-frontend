@@ -28,7 +28,9 @@ class App extends Component  {
 
   componentDidMount(){
     this.fetchRecipes()
-    this.fetchMyRecipes()
+    if (JSON.parse(localStorage.getItem('user')).id){
+      this.fetchMyRecipes(JSON.parse(localStorage.getItem('user')).id)
+    }
   }
 
   fetchRecipes = () => {
@@ -37,10 +39,11 @@ class App extends Component  {
     .then(data => this.setState({allRecipes: data}))
   }
 
-  fetchMyRecipes = () => {
-    return fetch(`http://localhost:3000/users/1`)
+  fetchMyRecipes = id => {
+    return fetch(`http://localhost:3000/users/${id}`)
     .then(res => res.json())
-    .then(data => this.setState({myRecipes: data }))
+
+    .then(data => this.setState({myRecipes: { owned_recipes: data.owned_recipes, favorite_recipes: data.favorite_recipes}}))
   }
 
   // removeBots = (selectedBot) => {
@@ -87,6 +90,22 @@ class App extends Component  {
     this.setState({ search: e.target.value})
   }
 
+  login = (userInfo) => {
+    console.log(userInfo)
+    fetch('http://localhost:3000/login', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify(userInfo)
+    })
+    .then(res => res.json())
+    .then(json => localStorage.setItem('user', JSON.stringify(json)))
+    .then(this.fetchMyRecipes(JSON.parse(localStorage.getItem('user')).id))
+    // .then(this.fetchMyRecipes(localStorage.getItem(user['id'])))
+  }
+
   
   render(){
 
@@ -124,7 +143,7 @@ class App extends Component  {
           <Route 
             path="/login"
             exact
-            render={(props) => <LoginForm {...props} />
+            render={(props) => <LoginForm {...props} onLogin={this.login} />
             }
           />
           
