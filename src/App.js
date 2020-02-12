@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 // import logo from './logo.svg';
 // import 'semantic-ui-css/semantic.min.css';
 
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
 import './App.css';
 
 import MainPage from './components/MainPage'
@@ -86,22 +88,42 @@ class App extends Component  {
 
     console.log("here", this.state.myRecipes.owned_recipes)
 
-    // const allRecipes = this.state.allRecipes.filter(r => r.recipe.title.includes(this.state.search))
+    const allRecipes = this.state.allRecipes.filter(r => r.recipe.title.includes(this.state.search))
     const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r => r.recipe.title.includes(this.state.search))
     const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r => r.recipe.title.includes(this.state.search))
 
 
     return (
-          <div>
-            {/* {console.log(this.state)} */}
-            <NavBar recipes={this.state.allRecipes} search={this.state.search} onSearch={this.updateSearch}/> 
-            {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
-            ) : (
-              <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} /> 
-              // <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
-               
-              )} 
-          </div>
+      <Router>
+          {/* {console.log(this.state)} */}
+          <NavBar recipes={this.state.allRecipes} search={this.state.search} onSearch={this.updateSearch}/> 
+          <Route 
+            path="/main-page"
+            exact
+            render={() => <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />}
+          />
+
+          <Route 
+            path="/my-page"
+            exact
+            render={() => 
+              <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} />
+            }
+            />
+
+          <Route 
+            path="/recipe-details/:id"
+            exact
+            render={(props) => <Details {...props} recipes={this.state.allRecipes} />
+            }
+          />
+          
+      </Router>
+            // {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
+            // ) : (
+            //   <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} /> 
+              
+            //   )} 
         
     );
   }
