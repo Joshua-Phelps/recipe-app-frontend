@@ -16,7 +16,6 @@ class NavBar extends Component{
       return recipe.category}).filter((v, i, a) => a.indexOf(v) === i).sort().map(category => {
            return <div className="item"><li>{category}</li></div>
       })
-    
   }
 
   handleChange = e => {
@@ -42,7 +41,7 @@ class NavBar extends Component{
       category: e.target.innerText
     }, this.props.filterAllRecipes('categoty', e.target.innerText))
   }
-
+  
   render() {    
 
     return(
