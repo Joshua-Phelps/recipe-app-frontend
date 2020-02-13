@@ -1,16 +1,12 @@
 import React, { Component } from "react";
 // import 'semantic-ui-css/semantic.min.css';
-
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
 import "./App.css";
-
 import MainPage from "./components/MainPage";
 import MyPage from "./components/MyPage";
 import Details from "./components/Details";
 import NavBar from "./components/NavBar";
 import RecipeEditForm from './components/RecipeEditForm'
-
 import Login from "./Login";
 import LoginForm from "./components/LoginForm";
 
@@ -21,7 +17,7 @@ class App extends Component {
     loggedIn: false,
     selectedRecipe: false,
     user_id: null,
-    search: ""
+    search: "",
   };
 
   componentDidMount() {
@@ -52,9 +48,45 @@ class App extends Component {
       );
   };
 
-  handleCategorySelect = () => {
-    console.log("Category Selected");
-  };
+  filterRecipesByArea = (area) => {
+    console.log(area);
+    if (area === "All") {
+      this.setState(prevState => ({
+        myRecipes: {
+          favorite_recipes: prevState.myRecipes.favorite_recipes,
+          owned_recipes: prevState.myRecipes.owned_recipes,
+        },
+        allRecipes: prevState.allRecipes
+    }))
+    } else {
+    this.setState(prevState => ({
+      myRecipes: {
+        favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.area === area),
+        owned_recipes: prevState.myRecipes.owned_recipes.filter(r => r.recipe.area === area),
+      },
+      allRecipes: prevState.allRecipes.filter(r => r.recipe.area === area)
+  }))
+  }}
+
+  filterRecipesByCategory = (category) => {
+    console.log(category)
+    if (category === "All") {
+      this.setState(prevState => ({
+        myRecipes: {
+          favorite_recipes: prevState.myRecipes.favorite_recipes,
+          owned_recipes: prevState.myRecipes.owned_recipes,
+        },
+        allRecipes: prevState.allRecipes
+    }))
+    } else {
+    this.setState(prevState => ({
+      myRecipes: {
+        favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.category === category),
+        owned_recipes: prevState.myRecipes.owned_recipes.filter(r => r.recipe.category === category),
+      },
+      allRecipes: prevState.allRecipes.filter(r => r.recipe.category === category)
+  }))
+  }}
 
   showDetails = recipe => {
     this.setState({ selectedRecipe: recipe });
@@ -95,7 +127,6 @@ class App extends Component {
           owned_recipes: prevState.myRecipes.owned_recipes.filter(r => r.recipe.id !== id),
         },
           allRecipes: prevState.allRecipes.filter(r => r.recipe.id !== id)
-        
       })))
   }
 
@@ -115,7 +146,6 @@ class App extends Component {
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
-          
           this.setState(prevState => ({
             myRecipes: {
               favorite_recipes: [...prevState.myRecipes.favorite_recipes, data],
@@ -124,7 +154,6 @@ class App extends Component {
           }))
           alert("Recipe is successfully added to your favorites!")
         } else if (data.destroyed) {
-          
           this.setState(prevState => ({myRecipes: {
             owned_recipes: [...prevState.myRecipes.owned_recipes],
             favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.id !== data.id)
@@ -156,11 +185,12 @@ class App extends Component {
   };
 
   render() {
-    console.log("owned", this.state.myRecipes.owned_recipes);
-    console.log("favorite", this.state.myRecipes.favorite_recipes);
+    console.log("all", this.state.allRecipes.length);
+    console.log("owned", this.state.myRecipes.owned_recipes.length);
+    console.log("favorite", this.state.myRecipes.favorite_recipes.length);
 
     const allRecipes = this.state.allRecipes.filter(r =>
-      r.recipe.title.includes(this.state.search)
+      r.recipe.title.includes(this.state.search) 
     );
     const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r =>
       r.recipe.title.includes(this.state.search)
@@ -180,6 +210,8 @@ class App extends Component {
           recipes={this.state.allRecipes}
           search={this.state.search}
           onSearch={this.updateSearch}
+          filterRecipesByArea={this.filterRecipesByArea}
+          filterRecipesByCategory={this.filterRecipesByCategory}
         />
         <Switch>
           {localStorage.length !== 0 ? (

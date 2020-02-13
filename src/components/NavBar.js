@@ -3,44 +3,40 @@ import { Menu, Dropdown, Input, Button, Sticky } from 'semantic-ui-react'
 import {Link} from  'react-router-dom';
 
 class NavBar extends Component{
-
   constructor() {
     super()
     this.state = {
-        area: " ",
-        category: " "
+        area: "All",
+        category: "All"
     }
 }
   uniqCategories = () => {
-    return this.props.recipes.map(recipe => {
-      return recipe.category}).filter((v, i, a) => a.indexOf(v) === i).sort().map(category => {
-           return <div className="item"><li>{category}</li></div>
-      })
-    
+    const uniq = this.props.recipes.map(recipe => recipe.recipe.category).filter((v, i, a) => a.indexOf(v) === i).sort().map(category => category)
+      uniq.splice(0, 1, "All")
+      return uniq.map(category => <div className="item"><li>{category}</li></div>)
+  }
+
+  uniqAreas = () => {
+    const uniq = this.props.recipes.map(recipe => recipe.recipe.area).filter((v, i, a) => a.indexOf(v) === i).sort().map(area => area)
+      uniq.splice(0, 1, "All")
+      return uniq.map(area => <div className="item"><li>{area}</li></div>)
+  }
+
+  handleCategorySelect = (e) => {
+    this.setState({
+      category: e.target.innerText
+    }, this.props.filterRecipesByCategory(e.target.innerText))
+  }
+
+  handleAreaSelect = (e) => {
+    // console.log(e.target.innerText)
+    this.setState({
+      area: e.target.innerText
+    }, this.props.filterRecipesByArea(e.target.innerText))
   }
 
   handleChange = e => {
     this.props.onSearch(e)
-  }
-  
-  uniqAreas = () => {
-    return this.props.recipes.map(recipe => {
-      return recipe.area}).filter((v, i, a) => a.indexOf(v) === i).sort().map(area => {
-          return <div className="item"><li>{area}</li></div>
-      })
-  }
-
-  handleAreaSelect = (e) => {
-    this.setState({
-      area: e.target.innerText
-    }, this.props.filterAllRecipes('area', e.target.innerText))
-  }
-
-  handleCategorySelect = (e) => {
-    // console.log(e.target.innerText)
-    this.setState({
-      category: e.target.innerText
-    }, this.props.filterAllRecipes('categoty', e.target.innerText))
   }
 
   render() {    
