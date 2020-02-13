@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AddIngredientForm from './AddIngredientForm'
+import AddIngredientEditForm from './AddIngredientForm'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
 
 
@@ -24,15 +24,25 @@ class RecipeEditForm extends Component {
         const filteredRec =  this.props.recipes.filter(r => r.recipe.id === parseInt(id) )
         console.log(filteredRec)
         if (filteredRec[0]) {
-            console.log(filteredRec)
+            let ingArray = filteredRec[0].ingredients.map(ing => {
+                return {ingName: ing.ing_name ,amount: ''}
+            })
+            this.setState({
+                title: filteredRec[0].recipe.title,
+                image: filteredRec[0].recipe.img,
+                area: filteredRec[0].recipe.area,
+                category: filteredRec[0].recipe.category,
+                directions: filteredRec[0].recipe.directions,
+                ingredients: ingArray,
+                rating: filteredRec[0].recipe.directions 
+            })
+            filteredRec[0].ingredients.map(ing => {
+                console.log(ing.ing_name)
+                return {ing_name: ing.ing_name ,amount: ''}
+            })
         } else {
-            
             this.props.history.push(`/recipe-details/${id}`)
-
         }
-        this.setState({
-
-        })
     }
 
     
@@ -119,7 +129,7 @@ class RecipeEditForm extends Component {
 
             <Form.Group widths='equal'>
                 <Button type='button' onClick={this.addIngredientInput}>Add Ingredient</Button>
-                <AddIngredientForm ingredients={ingredients} />
+                <AddIngredientEditForm ingredients={this.state.ingredients} />
             </Form.Group>
 
                 <br></br>
