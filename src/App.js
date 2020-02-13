@@ -86,6 +86,19 @@ class App extends Component {
     this.setState({ search: e.target.value });
   };
 
+  deleteRecipe = (id) => {
+    fetch(`http://localhost:3000/recipes/${id}`, {
+            method: 'DELETE'
+        })
+        .then(() => this.setState(prevState => ({myRecipes: {
+          favorite_recipes: [...prevState.myRecipes.favorite_recipes],
+          owned_recipes: prevState.myRecipes.owned_recipes.filter(r => r.recipe.id !== id),
+        },
+          allRecipes: prevState.allRecipes.filter(r => r.recipe.id !== id)
+        
+      })))
+  }
+
   addToFavorites = (recipeId, userId) => {
     console.log(recipeId, userId);
     fetch(`http://localhost:3000/user_recipes`, {
@@ -212,6 +225,7 @@ class App extends Component {
                 {...props}
                 recipes={this.state.allRecipes}
                 onFavorites={this.addToFavorites}
+                deleteRecipe={this.deleteRecipe}
               />
             )}
           />
