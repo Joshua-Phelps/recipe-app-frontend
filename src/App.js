@@ -21,14 +21,13 @@ class App extends Component {
     search: "",
     category: "",
     area: "",
-    user: null
+    user: { id: null, username: ''}
   };
 
   componentDidMount() {
     this.fetchRecipes();
     if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id) {
         this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id);
-      // this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
     }
   }
 
@@ -90,7 +89,6 @@ class App extends Component {
           }
         }))
       )
-    // .then(data => console.log(data))
   };
 
   editRecipe = (recipeInfo, id) => {
@@ -126,7 +124,6 @@ class App extends Component {
       search: upFirstLetter
     })
     
-    // this.setState({ search: e.target.value });
   };
 
   deleteRecipe = (id) => {
@@ -214,7 +211,6 @@ class App extends Component {
     console.log("favorite:", this.state.myRecipes.favorite_recipes);
 
     const allRecipes = this.state.allRecipes.filter(r => {
-      // this logic needs a complex method to account for it
       return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
     });
     const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r => {
@@ -223,14 +219,8 @@ class App extends Component {
     const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r => {
       return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
     });
-    // if (localStorage.length !== 0 && !this.state.loggedIn){
-    //   this.setState({loggedIn: true})
-    //   this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
-    //   console.log("logged in")
-    // }
     return (
       <Router>
-        {/* {console.log(this.state)} */}
         <NavBar
           recipes={this.state.allRecipes}
           search={this.state.search}
@@ -238,6 +228,7 @@ class App extends Component {
           changeCategory={this.changeCategory}
           changeArea={this.changeArea}
           onClearLoggedIn={this.clearLoggedIn}
+          user={this.state.user}
         />
         <Switch>
           {localStorage.length !== 0 ? (
@@ -304,22 +295,7 @@ class App extends Component {
           />
         </Switch>
       </Router>
-      // {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe}/>
-      // ) : (
-      //   <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} />
 
-      //   )}
-
-      // <div>
-      //   {/* {console.log(this.state)} */}
-      //   <NavBar recipes={this.state.allRecipes} search={this.state.search} onSearch={this.updateSearch} />
-      //   {(this.state.selectedRecipe) ? (<Details recipe={this.state.selectedRecipe} onFavorites={this.addToFavorites} />
-      //   ) : (
-      //       <MyPage onMakeNewRecipe={this.makeNewRecipe} onShowDetails={this.showDetails} favoriteRecipes={favoriteRecipes} ownedRecipes={ownedRecipes} />
-      //       // <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
-
-      //     )}
-      // </div>
     );
   }
 }

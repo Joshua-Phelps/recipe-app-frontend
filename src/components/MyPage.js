@@ -15,8 +15,6 @@ class MyPage extends Component {
     }
 
     handleItemClick = (e, { name }) => {
-        // console.log(e)
-        console.log(name)
         this.setState({ activeItem: name})
     }    
 

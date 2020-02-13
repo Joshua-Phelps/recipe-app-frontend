@@ -29,14 +29,12 @@ class Details extends Component {
     }
 
     renderInfo = (recipeObj, attr ) => {
-        console.log(recipeObj[0])
         if (recipeObj[0]){
             return recipeObj[0].recipe[attr]
         }
     }
 
     renderIngredients = (recipeObj) => {
-        console.log(recipeObj)
         if (recipeObj[0]){
             return recipeObj[0].ingredients.map(ing => {
                 return (<div className="item"><li>{ing.ing_name.charAt(0).toUpperCase() + ing.ing_name.slice(1)}</li></div>)
@@ -111,12 +109,6 @@ class Details extends Component {
                         <button className="fluid ui button" onClick={() => {this.props.onFavorites(id, JSON.parse(localStorage.getItem('user')).id)}}>Add to My Favorites</button>
                         </Item.Content> <br></br>
                         </Item>
-
-
-                        {/* </Item.Description><br></br>
-                            <button className="fluid ui button">Add to My Favorites</button>
-                    </Item.Content> <br></br>
-                </Item> */}
         </Item.Group>
         </> 
         )

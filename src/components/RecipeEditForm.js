@@ -37,7 +37,6 @@ class RecipeEditForm extends Component {
                 rating: filteredRec[0].recipe.directions 
             })
             filteredRec[0].ingredients.map(ing => {
-                console.log(ing.ing_name)
                 return {ing_name: ing.ing_name ,amount: ''}
             })
         } else {
@@ -109,11 +108,6 @@ class RecipeEditForm extends Component {
                 Region:
                 <input type="text" name="area" value={area} placeholder='region' />
             </lable>
-
-            {/* <lable style={{ paddingRight:"10px" }} >
-                Category:
-                <input type="text" name="category" value={category} placeholder='e.g. breakfast' />
-            </lable> */}
 
             <lable style={{ paddingRight:"10px" }} >
                 Category:{' '}

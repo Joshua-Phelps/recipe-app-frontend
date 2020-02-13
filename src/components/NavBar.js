@@ -42,7 +42,6 @@ class NavBar extends Component{
 
     return(
       <div className="nav-bar"> 
-      {/* {console.log(this.props.recipes)} */}
       <Sticky >                                                                 
         <Menu
           size='massive'
@@ -64,6 +63,8 @@ class NavBar extends Component{
           <Menu.Item>
             <Input className='icon' value={this.props.search} icon='search' onChange={this.handleChange}  placeholder='Search...' />
           </Menu.Item>
+          <Menu.Item>
+          </Menu.Item>
               <div className="right menu">
         <Menu>
             <Menu.Item floated='right'>
@@ -71,15 +72,14 @@ class NavBar extends Component{
             </Menu.Item>
             
             <Menu.Item floated='right'>
-              {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button ><Link to="/my-page">My Page</Link></Button> : null }
+    {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button ><Link to="/my-page">{this.props.user.username !== ''? `${this.props.user.username}'s Page` : 'My Page'}</Link></Button> : null }
             </Menu.Item>
 
             <Menu.Item floated='right'>
               <Button onClick={this.handleLogin} >{JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Link to="/">Log Out</Link> : <Link to="/login">Log In</Link> }</Button>
             </Menu.Item>
         </Menu>
-              </div>
-
+          </div>
         </Menu>
       </Sticky>
       </div> 
@@ -91,4 +91,4 @@ export default NavBar;
 
 // https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTzDLV4KOwUnZSzw-SKsdxQi3QwRUmy6UtI6cQB6rwfoJixY9o1
 
-// const areas = Recipe.all.map {|rec| rec.area}.uniq
+

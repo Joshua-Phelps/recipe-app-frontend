@@ -12,14 +12,18 @@ class LoginForm extends Component {
     }
 
     handleLogin = () => {
-        // this.props.fetchRecipes(this.props.onLogin(this.state))
         this.props.onLogin(this.state)
-        if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id){
-            this.props.history.push('/my-page')
-        } else {
-            this.props.history.push('/login')
-            this.setState({ password: ''})
-        }
+        // console.log(JSON.parse(localStorage.getItem("user")))
+        setTimeout(() => {
+            if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id){
+                console.log("if")
+                this.props.history.push('/my-page')
+            } else {
+                console.log("else")
+                this.props.history.push('/login')
+                this.setState({ password: ''})
+            }
+        }, 1000)
 
     }
 
@@ -32,7 +36,7 @@ class LoginForm extends Component {
             <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
                 <Grid.Column style={{ maxWidth: 450 }}>
                 <Header as='h2' color='teal' textAlign='center'>
-                    {/* <Image src='https://image.shutterstock.com/image-vector/hungry-emoticon-emoji-symbol-yummy-260nw-765991756.jpg' /> Log-in to your account */}
+                    <Image src='https://image.shutterstock.com/image-vector/hungry-emoticon-emoji-symbol-yummy-260nw-765991756.jpg' /> Log-in to your account
                 </Header>
                 <Form size='large' onSubmit={this.handleLogin}>
                     <Segment stacked>

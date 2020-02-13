@@ -21,7 +21,9 @@ class RecipeForm extends Component {
     }
 
     componentDidMount(){
-        this.setState({ userId: this.props.user.id })
+        if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id){
+            this.setState({ userId: this.props.user.id })
+        }
     }
 
 
@@ -49,7 +51,6 @@ class RecipeForm extends Component {
     handleSubmit = e => {
         e.preventDefault()
         this.props.onMakeNewRecipe(this.state)
-        // console.log(this.props.myProps)
         this.props.myProps.history.push('/')
     }
 
@@ -89,11 +90,6 @@ class RecipeForm extends Component {
                 Region:
                 <input type="text" name="area" value={area} placeholder='region' />
             </lable>
-
-            {/* <lable style={{ paddingRight:"10px" }} >
-                Category:
-                <input type="text" name="category" value={category} placeholder='e.g. breakfast' />
-            </lable> */}
 
             <lable style={{ paddingRight:"10px" }} >
                 Category:{' '}
