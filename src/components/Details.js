@@ -17,12 +17,10 @@ class Details extends Component {
                 ingredients: []
         }
         const filteredRec =  this.props.recipes.filter(r => r.recipe.id === parseInt(id) )
-        console.log(filteredRec)
         if (filteredRec) {
 
             return foundRecipe = filteredRec;
         } else {
-            console.log("fr",foundRecipe)
             return foundRecipe;
         }
     }
