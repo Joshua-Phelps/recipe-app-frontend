@@ -47,6 +47,13 @@ class Details extends Component {
         }
     }
 
+    handleDelete = () => {
+        const id = this.renderInfo(this.getRecipes(), "id")
+        this.props.deleteRecipe(id)
+    }
+
+
+
     render() {
         if (!this.renderInfo(this.getRecipes(), "title")){
             return this.getRecipes()
@@ -76,6 +83,7 @@ class Details extends Component {
                         </div>
                         
                     <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button>
+                    <Button onClick={this.handleDelete}>Delete</Button>
                     </Item.Content>
                 </Item>
 
