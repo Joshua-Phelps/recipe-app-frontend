@@ -50,6 +50,7 @@ class Details extends Component {
     handleDelete = () => {
         const id = this.renderInfo(this.getRecipes(), "id")
         this.props.deleteRecipe(id)
+        this.props.history.push('/my-page')
     }
 
 

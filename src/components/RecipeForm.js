@@ -16,7 +16,12 @@ class RecipeForm extends Component {
             directions: '',
             ingredients: [{ingName: "", amount: ""}],
             rating: 0,
+            userId: null 
         }
+    }
+
+    componentDidMount(){
+        this.setState({ userId: this.props.user.id })
     }
 
 
@@ -43,8 +48,9 @@ class RecipeForm extends Component {
 
     handleSubmit = e => {
         e.preventDefault()
-        console.log('hello')
         this.props.onMakeNewRecipe(this.state)
+        // console.log(this.props.myProps)
+        this.props.myProps.history.push('/')
     }
 
     render() {

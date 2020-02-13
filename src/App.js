@@ -13,6 +13,7 @@ import RecipeEditForm from './components/RecipeEditForm'
 
 import Login from "./Login";
 import LoginForm from "./components/LoginForm";
+import RecipeForm from './components/RecipeForm'
 
 class App extends Component {
   state = {
@@ -78,8 +79,33 @@ class App extends Component {
             owned_recipes: [...prevState.myRecipes.owned_recipes, data]
           }
         }))
-      );
+      )
     // .then(data => console.log(data))
+  };
+
+  editRecipe = (recipeInfo, id) => {
+    fetch(`http://localhost:3000/recipes/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify(recipeInfo)
+    }).then(res => res.json())
+    .then(data => {
+      this.setState(prevState => ({
+        myRecipes: {
+          owned_recipes: prevState.myRecipes.owned_recipes.map( r => {
+            if (r.recipe.id === data.recipe.id){
+              return data
+            } else {
+              return r 
+            }
+          }),
+          favorite_recipes: [...prevState.myRecipes.favorite_recipes]
+        }
+      }))
+    })
   };
 
   updateSearch = e => {
@@ -163,11 +189,11 @@ class App extends Component {
     const allRecipes = this.state.allRecipes.filter(r =>
       r.recipe.title.includes(this.state.search)
     );
-    const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r =>
+    const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r => 
       r.recipe.title.includes(this.state.search)
     );
     const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r => {
-      return r.recipe.title.includes(this.state.search) 
+      return r.recipe.title.includes(this.state.search)
       // || r.recipe.category.includes(this.state.category)
     }
     );
@@ -190,12 +216,15 @@ class App extends Component {
             <Route
               path="/my-page"
               exact
-              render={() => (
+              render={props => (
                 <MyPage
+                  {...props}
+                  myProps={props}
                   onMakeNewRecipe={this.makeNewRecipe}
                   onShowDetails={this.showDetails}
                   favoriteRecipes={favoriteRecipes}
                   ownedRecipes={ownedRecipes}
+                  user={this.state.user}
                 />
               )}
             />
@@ -241,6 +270,7 @@ class App extends Component {
               <RecipeEditForm
                 {...props}
                 recipes={this.state.myRecipes.owned_recipes}
+                onEditRecipe={this.editRecipe}
               />
             )}
           />

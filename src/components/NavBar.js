@@ -13,11 +13,8 @@ class NavBar extends Component{
 }
 
   handleLogin = () => {
-    console.log("made it")
     if (JSON.parse(localStorage.getItem("user"))) {
-      console.log(localStorage)
       localStorage.clear()
-      console.log(localStorage)
     } 
     this.props.onClearLoggedIn()
   }
