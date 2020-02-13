@@ -3,10 +3,7 @@ import { Item, Rating, Button } from 'semantic-ui-react'
 import { Redirect } from "react-router-dom";
 import { Link } from 'react-router-dom';
 
-
 class Details extends Component {
-
-
 
     getRecipes = () => {
         const id = this.props.match.params.id;
@@ -51,8 +48,6 @@ class Details extends Component {
         const id = this.renderInfo(this.getRecipes(), "id")
         this.props.deleteRecipe(id)
     }
-
-
 
     render() {
         if (!this.renderInfo(this.getRecipes(), "title")){
