@@ -14,7 +14,13 @@ class LoginForm extends Component {
     handleLogin = () => {
         // this.props.fetchRecipes(this.props.onLogin(this.state))
         this.props.onLogin(this.state)
+        if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id){
             this.props.history.push('/my-page')
+        } else {
+            this.props.history.push('/login')
+            this.setState({ password: ''})
+        }
+
     }
 
     handleChange = e => {

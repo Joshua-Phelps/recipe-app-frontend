@@ -26,10 +26,8 @@ class App extends Component {
 
   componentDidMount() {
     this.fetchRecipes();
-    if (JSON.parse(localStorage.getItem("user"))) {
-      if(JSON.parse(localStorage.getItem("user")).id){
+    if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id) {
         this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id);
-      }
       // this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
     }
   }
