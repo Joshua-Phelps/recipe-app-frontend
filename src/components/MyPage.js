@@ -3,6 +3,7 @@ import CardContainer from '../containers/CardContainer'
 import RecipeCard from './RecipeCard'
 import { Input, Menu, Segment } from 'semantic-ui-react'
 import RecipeForm from './RecipeForm'
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 class MyPage extends Component {
 
@@ -41,12 +42,14 @@ class MyPage extends Component {
                     active={activeItem === 'favorite'}
                     onClick={this.handleItemClick}
                 />
+
                 </Menu>
 
                 <Segment attached='bottom'>
                     {(this.state.activeItem === 'My Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails}  recipes={this.props.ownedRecipes} /> : null }
                     {(this.state.activeItem === 'Favorite Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails} recipes={this.props.favoriteRecipes} /> : null }
-                    {(this.state.activeItem === 'Add Recipes') ? <RecipeForm onMakeNewRecipe={this.props.onMakeNewRecipe} /> : null }
+                    {(this.state.activeItem === 'Add Recipes') ? <RecipeForm user={this.props.user} onMakeNewRecipe={this.props.onMakeNewRecipe} myProps={this.props.myProps} /> : null }
+
                 </Segment>
 
             </div>

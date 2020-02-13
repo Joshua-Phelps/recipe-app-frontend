@@ -9,6 +9,7 @@ import NavBar from "./components/NavBar";
 import RecipeEditForm from './components/RecipeEditForm'
 import Login from "./Login";
 import LoginForm from "./components/LoginForm";
+import RecipeForm from './components/RecipeForm'
 
 class App extends Component {
   state = {
@@ -19,12 +20,13 @@ class App extends Component {
     user_id: null,
     search: "",
     category: "",
-    area: ""
+    area: "",
+    user: null
   };
 
   componentDidMount() {
     this.fetchRecipes();
-    if (localStorage.length !== 0) {
+    if (JSON.parse(localStorage.getItem("user"))) {
       this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id);
       // this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
     }
@@ -33,13 +35,12 @@ class App extends Component {
   fetchRecipes = () => {
     fetch("http://localhost:3000/recipes")
       .then(res => res.json())
-      .then(data => this.setState({ allRecipes: data }));
+      .then(data => this.setState({ allRecipes: data, user: JSON.parse(localStorage.getItem("user")) }));
   };
 
   fetchMyRecipes = id => {
     return fetch(`http://localhost:3000/users/${id}`)
       .then(res => res.json())
-
       .then(data =>
         this.setState({
           myRecipes: {
@@ -88,8 +89,33 @@ class App extends Component {
             owned_recipes: [...prevState.myRecipes.owned_recipes, data]
           }
         }))
-      );
+      )
     // .then(data => console.log(data))
+  };
+
+  editRecipe = (recipeInfo, id) => {
+    fetch(`http://localhost:3000/recipes/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify(recipeInfo)
+    }).then(res => res.json())
+    .then(data => {
+      this.setState(prevState => ({
+        myRecipes: {
+          owned_recipes: prevState.myRecipes.owned_recipes.map( r => {
+            if (r.recipe.id === data.recipe.id){
+              return data
+            } else {
+              return r 
+            }
+          }),
+          favorite_recipes: [...prevState.myRecipes.favorite_recipes]
+        }
+      }))
+    })
   };
 
   updateSearch = e => {
@@ -153,6 +179,10 @@ class App extends Component {
       });
   };
 
+  clearLoggedIn = () => {
+    this.setState({loggedIn: false})
+  }
+
   login = userInfo => {
     console.log(userInfo);
     fetch("http://localhost:3000/login", {
@@ -169,7 +199,8 @@ class App extends Component {
         console.log(localStorage);
         return json;
       })
-      .then(() => this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id));
+      .then(() => this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id))
+      // .then(() => this.setState({ loggedIn: true }))
   };
 
   render() {
@@ -201,34 +232,39 @@ class App extends Component {
           onSearch={this.updateSearch}
           changeCategory={this.changeCategory}
           changeArea={this.changeArea}
+          onClearLoggedIn={this.clearLoggedIn}
         />
         <Switch>
           {localStorage.length !== 0 ? (
             <Route
               path="/my-page"
               exact
-              render={() => (
+              render={props => (
                 <MyPage
+                  {...props}
+                  myProps={props}
                   onMakeNewRecipe={this.makeNewRecipe}
                   onShowDetails={this.showDetails}
                   favoriteRecipes={favoriteRecipes}
                   ownedRecipes={ownedRecipes}
+                  user={this.state.user}
                 />
               )}
             />
           ) : (
-              <Route
-                path="/login"
-                exact
-                render={props => (
-                  <LoginForm
-                    {...props}
-                    fetchRecipes={this.fetchMyRecipes}
-                    onLogin={this.login}
-                  />
-                )}
-              />
-            )}
+            <Route
+              path="/login"
+              exact
+              render={props => (
+                <LoginForm
+                  {...props}
+                  fetchRecipes={this.fetchMyRecipes}
+                  onLogin={this.login}
+                  loggedIn={this.state.loggedIn}
+                />
+              )}
+            />
+          )}
 
           <Route
             path="/"
@@ -257,6 +293,7 @@ class App extends Component {
               <RecipeEditForm
                 {...props}
                 recipes={this.state.myRecipes.owned_recipes}
+                onEditRecipe={this.editRecipe}
               />
             )}
           />
