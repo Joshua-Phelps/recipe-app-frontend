@@ -102,17 +102,21 @@ class App extends Component {
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
+          
           this.setState(prevState => ({
             myRecipes: {
               favorite_recipes: [...prevState.myRecipes.favorite_recipes, data],
               owned_recipes: prevState.myRecipes.owned_recipes
             }
-          }));
+          }))
+          alert("Recipe is successfully added to your favorites!")
         } else if (data.destroyed) {
+          
           this.setState(prevState => ({myRecipes: {
             owned_recipes: [...prevState.myRecipes.owned_recipes],
             favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.id !== data.id)
           }}))
+          alert("Recipe is successfully removed from your favorites!")
         } else {
           alert("You can not add your own recipe to favorites!")
         }
