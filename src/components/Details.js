@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 
 class Details extends Component {
 
+
+
     getRecipes = () => {
         const id = this.props.match.params.id;
         let foundRecipe = { 
@@ -75,7 +77,7 @@ class Details extends Component {
                                 {this.renderIngredients(this.getRecipes())}
                         </div>
                         
-                    <Button onClick={null} >Edit</Button>
+                    <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button>
                     </Item.Content>
                 </Item>
 

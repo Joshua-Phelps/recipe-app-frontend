@@ -4,7 +4,7 @@ import { Button, Form, Dropdown } from 'semantic-ui-react'
 
 
 
-class RecipeForm extends Component {
+class RecipeEditForm extends Component {
 
     constructor(){
         super()
@@ -17,6 +17,22 @@ class RecipeForm extends Component {
             ingredients: [{ingName: "", amount: ""}],
             rating: 0
         }
+    }
+
+    componentDidMount(){
+        const id = this.props.match.params.id
+        const filteredRec =  this.props.recipes.filter(r => r.recipe.id === parseInt(id) )
+        console.log(filteredRec)
+        if (filteredRec[0]) {
+            console.log(filteredRec)
+        } else {
+            
+            this.props.history.push(`/recipe-details/${id}`)
+
+        }
+        this.setState({
+
+        })
     }
 
     
@@ -114,4 +130,4 @@ class RecipeForm extends Component {
 
 }
 
-export default RecipeForm
+export default RecipeEditForm
