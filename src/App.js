@@ -83,7 +83,14 @@ class App extends Component {
   };
 
   updateSearch = e => {
-    this.setState({ search: e.target.value });
+    const input = e.target.value;
+    const upFirstLetter = input.charAt(0).toUpperCase() + input.slice(1);
+    console.log("__CAPITALIZE__", upFirstLetter)
+    this.setState({
+      search: upFirstLetter
+    })
+    
+    // this.setState({ search: e.target.value });
   };
 
   deleteRecipe = (id) => {
