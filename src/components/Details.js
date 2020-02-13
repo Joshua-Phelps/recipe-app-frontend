@@ -74,12 +74,12 @@ class Details extends Component {
                     <Item.Content>
                         <div className="ui bulleted list">
                             <h3>Ingredients:</h3>
-                                {/* {this.listIngredients()} */}
+                               
                                 {this.renderIngredients(this.getRecipes())}
                         </div>
-                        
-                    <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button>
-                    <Button onClick={this.handleDelete}>Delete</Button>
+                        {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button> : null }
+                    {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button onClick={this.handleDelete}>Delete</Button> : null }
+
                     </Item.Content>
                 </Item>
 

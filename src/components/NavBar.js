@@ -71,11 +71,11 @@ class NavBar extends Component{
             </Menu.Item>
             
             <Menu.Item floated='right'>
-              {JSON.parse(localStorage.getItem("user")) ? <Button ><Link to="/my-page">My Page</Link></Button> : null }
+              {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button ><Link to="/my-page">My Page</Link></Button> : null }
             </Menu.Item>
 
             <Menu.Item floated='right'>
-              <Button onClick={this.handleLogin} >{JSON.parse(localStorage.getItem("user")) ? <Link to="/">Log Out</Link> : <Link to="/login">Log In</Link> }</Button>
+              <Button onClick={this.handleLogin} >{JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Link to="/">Log Out</Link> : <Link to="/login">Log In</Link> }</Button>
             </Menu.Item>
         </Menu>
               </div>

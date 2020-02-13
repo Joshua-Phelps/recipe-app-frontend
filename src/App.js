@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import 'semantic-ui-css/semantic.min.css';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import "./App.css";
 import MainPage from "./components/MainPage";
 import MyPage from "./components/MyPage";
@@ -27,7 +27,9 @@ class App extends Component {
   componentDidMount() {
     this.fetchRecipes();
     if (JSON.parse(localStorage.getItem("user"))) {
-      this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id);
+      if(JSON.parse(localStorage.getItem("user")).id){
+        this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id);
+      }
       // this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
     }
   }
@@ -195,12 +197,17 @@ class App extends Component {
     })
       .then(res => res.json())
       .then(json => localStorage.setItem("user", JSON.stringify(json)))
-      .then(json => {
-        console.log(localStorage);
-        return json;
-      })
-      .then(() => this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id))
-      // .then(() => this.setState({ loggedIn: true }))
+      // .then(json => {
+      //   console.log(localStorage);
+      //   return json;
+      // })
+      .then(() => {
+        if(JSON.parse(localStorage.getItem("user")).id) {
+          this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
+        } else {
+          alert ("Wrong info!")
+        }
+    })
   };
 
   render() {
