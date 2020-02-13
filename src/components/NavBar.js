@@ -3,13 +3,7 @@ import { Menu, Dropdown, Input, Button, Sticky } from 'semantic-ui-react'
 import {Link} from  'react-router-dom';
 
 class NavBar extends Component{
-  constructor() {
-    super()
-    this.state = {
-        area: "All",
-        category: "All"
-    }
-}
+
   uniqCategories = () => {
     const uniq = this.props.recipes.map(recipe => recipe.recipe.category).filter((v, i, a) => a.indexOf(v) === i).sort().map(category => category)
       uniq.splice(0, 1, "All")
@@ -23,16 +17,13 @@ class NavBar extends Component{
   }
 
   handleCategorySelect = (e) => {
-    this.setState({
-      category: e.target.innerText
-    }, this.props.filterRecipesByCategory(e.target.innerText))
+    const category = e.target.innerText
+    this.props.changeCategory(category)
   }
 
   handleAreaSelect = (e) => {
-    // console.log(e.target.innerText)
-    this.setState({
-      area: e.target.innerText
-    }, this.props.filterRecipesByArea(e.target.innerText))
+    const area = e.target.innerText
+    this.props.changeArea(area)
   }
 
   handleChange = e => {

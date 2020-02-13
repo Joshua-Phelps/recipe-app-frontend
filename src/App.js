@@ -18,6 +18,8 @@ class App extends Component {
     selectedRecipe: false,
     user_id: null,
     search: "",
+    category: "",
+    area: ""
   };
 
   componentDidMount() {
@@ -48,45 +50,21 @@ class App extends Component {
       );
   };
 
-  filterRecipesByArea = (area) => {
-    console.log(area);
-    if (area === "All") {
-      this.setState(prevState => ({
-        myRecipes: {
-          favorite_recipes: prevState.myRecipes.favorite_recipes,
-          owned_recipes: prevState.myRecipes.owned_recipes,
-        },
-        allRecipes: prevState.allRecipes
-    }))
+  changeCategory = (category) => {
+    if (category !== "All") {
+      this.setState({ category: category })
     } else {
-    this.setState(prevState => ({
-      myRecipes: {
-        favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.area === area),
-        owned_recipes: prevState.myRecipes.owned_recipes.filter(r => r.recipe.area === area),
-      },
-      allRecipes: prevState.allRecipes.filter(r => r.recipe.area === area)
-  }))
-  }}
+      this.setState({ category: "" })
+    }
+  }
 
-  filterRecipesByCategory = (category) => {
-    console.log(category)
-    if (category === "All") {
-      this.setState(prevState => ({
-        myRecipes: {
-          favorite_recipes: prevState.myRecipes.favorite_recipes,
-          owned_recipes: prevState.myRecipes.owned_recipes,
-        },
-        allRecipes: prevState.allRecipes
-    }))
+  changeArea = (area) => {
+    if (area !== "All") {
+      this.setState({ area: area })
     } else {
-    this.setState(prevState => ({
-      myRecipes: {
-        favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.category === category),
-        owned_recipes: prevState.myRecipes.owned_recipes.filter(r => r.recipe.category === category),
-      },
-      allRecipes: prevState.allRecipes.filter(r => r.recipe.category === category)
-  }))
-  }}
+      this.setState({ area: "" })
+    }
+  }
 
   showDetails = recipe => {
     this.setState({ selectedRecipe: recipe });
@@ -120,13 +98,14 @@ class App extends Component {
 
   deleteRecipe = (id) => {
     fetch(`http://localhost:3000/recipes/${id}`, {
-            method: 'DELETE'
-        })
-        .then(() => this.setState(prevState => ({myRecipes: {
+      method: 'DELETE'
+    })
+      .then(() => this.setState(prevState => ({
+        myRecipes: {
           favorite_recipes: [...prevState.myRecipes.favorite_recipes],
           owned_recipes: prevState.myRecipes.owned_recipes.filter(r => r.recipe.id !== id),
         },
-          allRecipes: prevState.allRecipes.filter(r => r.recipe.id !== id)
+        allRecipes: prevState.allRecipes.filter(r => r.recipe.id !== id)
       })))
   }
 
@@ -154,10 +133,12 @@ class App extends Component {
           }))
           alert("Recipe is successfully added to your favorites!")
         } else if (data.destroyed) {
-          this.setState(prevState => ({myRecipes: {
-            owned_recipes: [...prevState.myRecipes.owned_recipes],
-            favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.id !== data.id)
-          }}))
+          this.setState(prevState => ({
+            myRecipes: {
+              owned_recipes: [...prevState.myRecipes.owned_recipes],
+              favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.id !== data.id)
+            }
+          }))
           alert("Recipe is successfully removed from your favorites!")
         } else {
           alert("You can not add your own recipe to favorites!")
@@ -185,19 +166,20 @@ class App extends Component {
   };
 
   render() {
-    console.log("all", this.state.allRecipes.length);
-    console.log("owned", this.state.myRecipes.owned_recipes.length);
-    console.log("favorite", this.state.myRecipes.favorite_recipes.length);
+    console.log("all recipes:", this.state.allRecipes.length);
+    console.log("owned:", this.state.myRecipes.owned_recipes.length);
+    console.log("favorite:", this.state.myRecipes.favorite_recipes);
 
-    const allRecipes = this.state.allRecipes.filter(r =>
-      r.recipe.title.includes(this.state.search) 
-    );
-    const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r =>
-      r.recipe.title.includes(this.state.search)
-    );
-    const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r =>
-      r.recipe.title.includes(this.state.search)
-    );
+    const allRecipes = this.state.allRecipes.filter(r => {
+      // this logic needs a complex method to account for it
+      return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
+    });
+    const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r => {
+      return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
+    });
+    const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r => {
+      return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
+    });
     // if (localStorage.length !== 0 && !this.state.loggedIn){
     //   this.setState({loggedIn: true})
     //   this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
@@ -210,8 +192,8 @@ class App extends Component {
           recipes={this.state.allRecipes}
           search={this.state.search}
           onSearch={this.updateSearch}
-          filterRecipesByArea={this.filterRecipesByArea}
-          filterRecipesByCategory={this.filterRecipesByCategory}
+          changeCategory={this.changeCategory}
+          changeArea={this.changeArea}
         />
         <Switch>
           {localStorage.length !== 0 ? (
@@ -228,18 +210,18 @@ class App extends Component {
               )}
             />
           ) : (
-            <Route
-              path="/login"
-              exact
-              render={props => (
-                <LoginForm
-                  {...props}
-                  fetchRecipes={this.fetchMyRecipes}
-                  onLogin={this.login}
-                />
-              )}
-            />
-          )}
+              <Route
+                path="/login"
+                exact
+                render={props => (
+                  <LoginForm
+                    {...props}
+                    fetchRecipes={this.fetchMyRecipes}
+                    onLogin={this.login}
+                  />
+                )}
+              />
+            )}
 
           <Route
             path="/"
