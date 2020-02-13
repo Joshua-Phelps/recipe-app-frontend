@@ -9,6 +9,7 @@ import MainPage from "./components/MainPage";
 import MyPage from "./components/MyPage";
 import Details from "./components/Details";
 import NavBar from "./components/NavBar";
+import RecipeEditForm from './components/RecipeEditForm'
 
 import Login from "./Login";
 import LoginForm from "./components/LoginForm";
@@ -107,6 +108,11 @@ class App extends Component {
               owned_recipes: prevState.myRecipes.owned_recipes
             }
           }));
+        } else if (data.destroyed) {
+          this.setState(prevState => ({myRecipes: {
+            owned_recipes: [...prevState.myRecipes.owned_recipes],
+            favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.id !== data.id)
+          }}))
         } else {
           alert("You can not add your own recipe to favorites!")
         }
@@ -202,6 +208,16 @@ class App extends Component {
                 {...props}
                 recipes={this.state.allRecipes}
                 onFavorites={this.addToFavorites}
+              />
+            )}
+          />
+          <Route
+            path="/edit-recipe/:id"
+            exact
+            render={props => (
+              <RecipeEditForm
+                {...props}
+                recipes={this.state.myRecipes.owned_recipes}
               />
             )}
           />
