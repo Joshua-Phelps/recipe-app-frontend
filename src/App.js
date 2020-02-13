@@ -108,7 +108,7 @@ class App extends Component {
             }
           }));
         } else {
-          console.log(data);
+          alert("You can not add your own recipe to favorites!")
         }
       });
   };
