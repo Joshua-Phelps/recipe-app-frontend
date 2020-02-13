@@ -11,6 +11,17 @@ class NavBar extends Component{
         category: " "
     }
 }
+
+  handleLogin = () => {
+    console.log("made it")
+    if (JSON.parse(localStorage.getItem("user"))) {
+      console.log(localStorage)
+      localStorage.clear()
+      console.log(localStorage)
+    } 
+    this.props.onClearLoggedIn()
+  }
+
   uniqCategories = () => {
     return this.props.recipes.map(recipe => {
       return recipe.category}).filter((v, i, a) => a.indexOf(v) === i).sort().map(category => {
@@ -76,11 +87,11 @@ class NavBar extends Component{
             </Menu.Item>
             
             <Menu.Item floated='right'>
-              <Button ><Link to="/my-page">My Page</Link></Button>
+              {JSON.parse(localStorage.getItem("user")) ? <Button ><Link to="/my-page">My Page</Link></Button> : null }
             </Menu.Item>
 
             <Menu.Item floated='right'>
-              <Button ><Link to="/login">Log In</Link></Button>
+              <Button onClick={this.handleLogin} >{JSON.parse(localStorage.getItem("user")) ? <Link to="/">Log Out</Link> : <Link to="/login">Log In</Link> }</Button>
             </Menu.Item>
         </Menu>
               </div>

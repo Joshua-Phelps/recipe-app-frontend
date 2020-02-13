@@ -15,11 +15,11 @@ class RecipeForm extends Component {
             category: '',
             directions: '',
             ingredients: [{ingName: "", amount: ""}],
-            rating: 0
+            rating: 0,
         }
     }
 
-    
+
 
     handleChange = (e) => {
         if (e.target.className === 'ingName' || e.target.className === 'amount'  ){

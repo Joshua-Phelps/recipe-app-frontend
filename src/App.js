@@ -20,13 +20,14 @@ class App extends Component {
     myRecipes: { owned_recipes: [], favorite_recipes: [] },
     loggedIn: false,
     selectedRecipe: false,
-    user_id: null,
-    search: ""
+    user: null,
+    search: "",
+    // category: ''
   };
 
   componentDidMount() {
     this.fetchRecipes();
-    if (localStorage.length !== 0) {
+    if (JSON.parse(localStorage.getItem("user"))) {
       this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id);
       // this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
     }
@@ -35,13 +36,12 @@ class App extends Component {
   fetchRecipes = () => {
     fetch("http://localhost:3000/recipes")
       .then(res => res.json())
-      .then(data => this.setState({ allRecipes: data }));
+      .then(data => this.setState({ allRecipes: data, user: JSON.parse(localStorage.getItem("user")) }));
   };
 
   fetchMyRecipes = id => {
     return fetch(`http://localhost:3000/users/${id}`)
       .then(res => res.json())
-
       .then(data =>
         this.setState({
           myRecipes: {
@@ -132,6 +132,10 @@ class App extends Component {
       });
   };
 
+  clearLoggedIn = () => {
+    this.setState({loggedIn: false})
+  }
+
   login = userInfo => {
     console.log(userInfo);
     fetch("http://localhost:3000/login", {
@@ -148,7 +152,8 @@ class App extends Component {
         console.log(localStorage);
         return json;
       })
-      .then(() => this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id));
+      .then(() => this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id))
+      // .then(() => this.setState({ loggedIn: true }))
   };
 
   render() {
@@ -161,8 +166,10 @@ class App extends Component {
     const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r =>
       r.recipe.title.includes(this.state.search)
     );
-    const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r =>
-      r.recipe.title.includes(this.state.search)
+    const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r => {
+      return r.recipe.title.includes(this.state.search) 
+      // || r.recipe.category.includes(this.state.category)
+    }
     );
     // if (localStorage.length !== 0 && !this.state.loggedIn){
     //   this.setState({loggedIn: true})
@@ -176,6 +183,7 @@ class App extends Component {
           recipes={this.state.allRecipes}
           search={this.state.search}
           onSearch={this.updateSearch}
+          onClearLoggedIn={this.clearLoggedIn}
         />
         <Switch>
           {localStorage.length !== 0 ? (
@@ -200,6 +208,7 @@ class App extends Component {
                   {...props}
                   fetchRecipes={this.fetchMyRecipes}
                   onLogin={this.login}
+                  loggedIn={this.state.loggedIn}
                 />
               )}
             />
