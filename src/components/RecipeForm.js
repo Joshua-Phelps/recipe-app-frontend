@@ -70,7 +70,7 @@ class RecipeForm extends Component {
         ]
 
         return (
-          <Form onSubmit={e => this.handleSubmit(e)} onChange={this.handleChange}>
+          <Form style={{ padding: "10px" }} onSubmit={e => this.handleSubmit(e)} onChange={this.handleChange}>
             <Form.Group widths='equal'>
             <lable style={{ paddingRight:"10px" }} >
                 Title:
