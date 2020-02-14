@@ -47,6 +47,7 @@ class NavBar extends Component{
           size='massive'
           attached='top'
           tabular
+          margin-bottom="10em"
           style={{ backgroundColor: '#fff', paddingTop: '1em' }}>         
           <Dropdown item text={this.props.category !== ''? this.props.category : 'Sort By Category'}>
             <Dropdown.Menu>
