@@ -1,14 +1,9 @@
 import React, { Component } from 'react'
 import RecipeCard from '../components/RecipeCard'
-
 import { Card, Container } from 'semantic-ui-react'
-
-
 // import { Grid } from 'semantic-ui-react'
 
-
 class CardContainer extends Component {
-
 
     //// map over card and display them 
 

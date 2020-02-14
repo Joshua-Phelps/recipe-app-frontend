@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import AddIngredientForm from './AddIngredientForm'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
 
-
-
 class RecipeForm extends Component {
 
     constructor(){
@@ -25,8 +23,6 @@ class RecipeForm extends Component {
             this.setState({ userId: this.props.user.id })
         }
     }
-
-
 
     handleChange = (e) => {
         if (e.target.className === 'ingName' || e.target.className === 'amount'  ){
@@ -113,7 +109,6 @@ class RecipeForm extends Component {
             </Form>
         )
     }
-
 }
 
 export default RecipeForm

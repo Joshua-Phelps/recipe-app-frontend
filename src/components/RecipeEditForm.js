@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import AddIngredientEditForm from './AddIngredientForm'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
 
-
-
 class RecipeEditForm extends Component {
 
     constructor(){
@@ -43,8 +41,6 @@ class RecipeEditForm extends Component {
             this.props.history.push(`/recipe-details/${id}`)
         }
     }
-
-    
 
     handleChange = (e) => {
         if (e.target.className === 'ingName' || e.target.className === 'amount'  ){
@@ -131,7 +127,6 @@ class RecipeEditForm extends Component {
             </Form>
         )
     }
-
 }
 
 export default RecipeEditForm

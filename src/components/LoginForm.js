@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Form, Grid, Header, Image, Message, Segment, Container } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-// import logo from '../images/logo.png'
 import logo2 from '../images/logo-small.png'
 
 class LoginForm extends Component {
@@ -25,7 +24,6 @@ class LoginForm extends Component {
                 this.setState({ password: ''})
             }
         }, 1000)
-
     }
 
     handleChange = e => {
@@ -34,9 +32,8 @@ class LoginForm extends Component {
 
     render(){
         return (
-            <Container style={{padding: "20px", }}>
-            {" "}
-            <Image src={logo2} width="250px" centered margin-top='50px' />
+            <Container style={{padding: "20px"}}>
+            <Image src={logo2} width="250px" centered/>
             <Grid textAlign='center' style={{ height: '100vh' }} >
                 <Grid.Column style={{ maxWidth: 450 }}>
                 <Header as='h2' color='teal' textAlign='center' style={{padding: "20px", }}>
@@ -55,7 +52,6 @@ class LoginForm extends Component {
                         onChange={this.handleChange}
                         value={this.state.password}
                     />
-
                     <Button color='teal' fluid size='large'>
                         Login
                     </Button>
@@ -69,8 +65,6 @@ class LoginForm extends Component {
             </Container>
         )
     }
-
 } 
-
 
 export default LoginForm
