@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Image, Message, Segment, Container } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+// import logo from '../images/logo.png'
+import logo2 from '../images/logo-small.png'
 
 class LoginForm extends Component {
 
@@ -32,10 +34,13 @@ class LoginForm extends Component {
 
     render(){
         return (
-            <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+            <Container style={{padding: "20px", }}>
+            {" "}
+            <Image src={logo2} width="250px" centered margin-top='50px' />
+            <Grid textAlign='center' style={{ height: '100vh' }} >
                 <Grid.Column style={{ maxWidth: 450 }}>
-                <Header as='h2' color='teal' textAlign='center'>
-                    <Image src='https://image.shutterstock.com/image-vector/hungry-emoticon-emoji-symbol-yummy-260nw-765991756.jpg' /> Log-in to your account
+                <Header as='h2' color='teal' textAlign='center' style={{padding: "20px", }}>
+                     Log-in to your account
                 </Header>
                 <Form size='large' onSubmit={this.handleLogin}>
                     <Segment stacked>
@@ -61,7 +66,7 @@ class LoginForm extends Component {
                 </Message>
                 </Grid.Column>
             </Grid>
-
+            </Container>
         )
     }
 
