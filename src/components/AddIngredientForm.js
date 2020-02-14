@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 
 class AddIngredientForm extends Component {
 
-
     render() {
 
         return (
@@ -33,9 +32,7 @@ class AddIngredientForm extends Component {
               )
             })
           )
-
-          
         }
     }
-export default AddIngredientForm
-        
+
+export default AddIngredientForm     

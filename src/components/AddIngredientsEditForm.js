@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 
 class AddIngredientForm extends Component {
 
-
-    render() {
+  render() {
 
         return (
             this.props.ingredients.map((val, idx)=> {
@@ -33,8 +32,7 @@ class AddIngredientForm extends Component {
               )
             })
           )
-
-          
         }
     }
+    
 export default AddIngredientForm

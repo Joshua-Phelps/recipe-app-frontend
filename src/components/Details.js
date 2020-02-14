@@ -16,11 +16,10 @@ class Details extends Component {
             recipe: {
                 title: "", img: "", area: "", category: "", rating: "", id: null, directions: ""
             },
-                ingredients: []
+            ingredients: []
         }
         const filteredRec =  this.props.recipes.filter(r => r.recipe.id === parseInt(id) )
         if (filteredRec) {
-
             return foundRecipe = filteredRec;
         } else {
             return foundRecipe;
@@ -77,12 +76,10 @@ class Details extends Component {
                     <Item.Content>
                         <div className="ui bulleted list">
                             <h3>Ingredients:</h3>
-                               
                                 {this.renderIngredients(this.getRecipes())}
                         </div>
                         {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button> : null }
                     {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button onClick={this.handleDelete}>Delete</Button> : null }
-
                     </Item.Content>
                 </Item>
 
@@ -94,13 +91,10 @@ class Details extends Component {
                         <Item.Meta>
                             <span className='category'>Category: {category}</span>
                         </Item.Meta>
-
-
                         <Item.Meta >
                             <span className='rating'>Rating: </span>
                             <Rating icon='star' onRate={this.handleRating} defaultRating={rating} maxRating={5} />
                         </Item.Meta><br></br>
-
 
                         <Item.Description>
                             <div className="ui bulleted list">
@@ -109,13 +103,12 @@ class Details extends Component {
                                         return <div className="item"><li key={key}>{direction}</li></div>
                                     })}
                             </div>
-
-                    </Item.Description><br></br>
-                        <button className="fluid ui button" onClick={() => {this.props.onFavorites(id, JSON.parse(localStorage.getItem('user')).id)}}>Add to My Favorites</button>
-                        </Item.Content> <br></br>
-                        </Item>
-        </Item.Group>
-        </> 
+                        </Item.Description><br></br>
+                            <button className="fluid ui button" onClick={() => {this.props.onFavorites(id, JSON.parse(localStorage.getItem('user')).id)}}>Add to My Favorites</button>
+                    </Item.Content> <br></br>
+                </Item>
+            </Item.Group>
+            </> 
         )
         }
     }

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Menu, Dropdown, Input, Button, Sticky } from 'semantic-ui-react'
+import { Menu, Dropdown, Input, Button, Sticky, Image } from 'semantic-ui-react'
 import {Link} from  'react-router-dom';
+import logo2 from '../images/logo-small.png'
 
 class NavBar extends Component{
-
 
   handleLogin = () => {
     if (JSON.parse(localStorage.getItem("user"))) {
@@ -64,7 +64,12 @@ class NavBar extends Component{
           <Menu.Item>
             <Input className='icon' value={this.props.search} icon='search' onChange={this.handleChange}  placeholder='Search...' />
           </Menu.Item>
+        
           <Menu.Item>
+          </Menu.Item>
+
+          <Menu.Item>
+    {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Image src={logo2} width="130px" centered/> : null}
           </Menu.Item>
               <div className="right menu">
         <Menu>
@@ -91,5 +96,3 @@ class NavBar extends Component{
 export default NavBar;
 
 // https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTzDLV4KOwUnZSzw-SKsdxQi3QwRUmy6UtI6cQB6rwfoJixY9o1
-
-

@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
-
 import CardContainer from '../containers/CardContainer'
 
 class MainPage extends Component {
-
-
 
     render() {
         return (
@@ -13,7 +10,6 @@ class MainPage extends Component {
             </div>
         )
     }
-
 }
 
 export default MainPage
