@@ -24,7 +24,7 @@ class CardContainer extends Component {
         return (
             <div>
                 <Container>
-                    <Card.Group itemsPerRow={3}>
+                    <Card.Group centered itemsPerRow={3}>
                             {this.renderCards()}
                     </Card.Group>
                 </Container>

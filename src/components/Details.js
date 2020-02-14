@@ -66,7 +66,7 @@ class Details extends Component {
             return ( 
             <> 
             <Link to={`recipe-details/${id}`} />          
-            <Item.Group>
+            <Item.Group style={{ marginLeft: '2.8rem', padding: "20px" }}>
                 <Item>
                     <Item.Header as='h2'>{title}</Item.Header><br></br>
                 </Item>
@@ -86,13 +86,13 @@ class Details extends Component {
                 <Item>
                     <Item.Content>
                         <Item.Meta>
-                            <span className='area'>Area: {area}</span>
+                            <span className='area' style={{ fontWeight: "bold" }}>Area: {area}</span>
                         </Item.Meta>
                         <Item.Meta>
-                            <span className='category'>Category: {category}</span>
+                            <span className='category' style={{ fontWeight: "bold" }}>Category: {category}</span>
                         </Item.Meta>
                         <Item.Meta >
-                            <span className='rating'>Rating: </span>
+                            <span className='rating' style={{ fontWeight: "bold" }}>Rating: </span>
                             <Rating icon='star' onRate={this.handleRating} defaultRating={rating} maxRating={5} />
                         </Item.Meta><br></br>
 

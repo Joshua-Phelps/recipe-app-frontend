@@ -41,8 +41,8 @@ class NavBar extends Component{
   render() {    
 
     return(
-      <div className="nav-bar"> 
-      <Sticky >                                                                 
+      <div className="nav-bar">       
+      <Sticky style={{padding: "20px"}}>                                                                 
         <Menu
           size='massive'
           attached='top'
