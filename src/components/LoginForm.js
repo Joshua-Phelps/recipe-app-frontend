@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 class LoginForm extends Component {
 
@@ -16,10 +17,8 @@ class LoginForm extends Component {
         // console.log(JSON.parse(localStorage.getItem("user")))
         setTimeout(() => {
             if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id){
-                console.log("if")
                 this.props.history.push('/my-page')
-            } else {
-                console.log("else")
+            } else {    
                 this.props.history.push('/login')
                 this.setState({ password: ''})
             }
@@ -58,7 +57,7 @@ class LoginForm extends Component {
                     </Segment>
                 </Form>
                 <Message>
-                    New to us? <a href='#'>Sign Up</a>
+                    New to us? <Link to='/sign-up'>Sign up</Link>
                 </Message>
                 </Grid.Column>
             </Grid>

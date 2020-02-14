@@ -5,6 +5,11 @@ import { Link } from 'react-router-dom';
 
 class Details extends Component {
 
+    handleRating = (e, { rating }) => {
+        const id = this.props.match.params.id
+        this.props.onChangeRating(rating, id)
+    }
+
     getRecipes = () => {
         const id = this.props.match.params.id;
         let foundRecipe = { 
@@ -93,7 +98,7 @@ class Details extends Component {
 
                         <Item.Meta >
                             <span className='rating'>Rating: </span>
-                            <Rating icon='star' defaultRating={rating} maxRating={5} />
+                            <Rating icon='star' onRate={this.handleRating} defaultRating={rating} maxRating={5} />
                         </Item.Meta><br></br>
 
 

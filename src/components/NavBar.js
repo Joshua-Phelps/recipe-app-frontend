@@ -48,13 +48,13 @@ class NavBar extends Component{
           attached='top'
           tabular
           style={{ backgroundColor: '#fff', paddingTop: '1em' }}>         
-          <Dropdown item text='Sort By Category'>
+          <Dropdown item text={this.props.category !== ''? this.props.category : 'Sort By Category'}>
             <Dropdown.Menu>
                 <Dropdown.Item  onClick={(e) => this.handleCategorySelect(e)}>{this.uniqCategories()}</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
 
-          <Dropdown item text='Sort By Area'>
+          <Dropdown item text={this.props.area !== ''? this.props.area : 'Sort By Area'}>
             <Dropdown.Menu>
                 <Dropdown.Item onClick={(e) => this.handleAreaSelect(e)}>{this.uniqAreas()}</Dropdown.Item>
             </Dropdown.Menu>

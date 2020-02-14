@@ -10,6 +10,7 @@ import RecipeEditForm from './components/RecipeEditForm'
 import Login from "./Login";
 import LoginForm from "./components/LoginForm";
 import RecipeForm from './components/RecipeForm'
+import SignUp from './components/SignUp'
 
 class App extends Component {
   state = {
@@ -49,6 +50,31 @@ class App extends Component {
         })
       );
   };
+
+  changeRating = (rating, id) => {
+    fetch(`http://localhost:3000/recipes/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({rating, id})
+    }).then(res => res.json())
+    .then(data => {
+      this.setState(prevState => ({
+        myRecipes: {
+          owned_recipes: prevState.myRecipes.owned_recipes.map( r => {
+            if (r.recipe.id === data.recipe.id){
+              return data
+            } else {
+              return r 
+            }
+          }),
+          favorite_recipes: [...prevState.myRecipes.favorite_recipes]
+        }
+      }))
+    })
+  }
 
   changeCategory = (category) => {
     if (category !== "All") {
@@ -199,6 +225,7 @@ class App extends Component {
       .then(() => {
         if(JSON.parse(localStorage.getItem("user")).id) {
           this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
+          this.setState({user: JSON.parse(localStorage.getItem("user"))})
         } else {
           alert ("Wrong info!")
         }
@@ -229,6 +256,8 @@ class App extends Component {
           changeArea={this.changeArea}
           onClearLoggedIn={this.clearLoggedIn}
           user={this.state.user}
+          category={this.state.category}
+          area={this.state.area}
         />
         <Switch>
           {localStorage.length !== 0 ? (
@@ -279,6 +308,7 @@ class App extends Component {
                 recipes={this.state.allRecipes}
                 onFavorites={this.addToFavorites}
                 deleteRecipe={this.deleteRecipe}
+                onChangeRating={this.changeRating}
               />
             )}
           />
@@ -291,6 +321,13 @@ class App extends Component {
                 recipes={this.state.myRecipes.owned_recipes}
                 onEditRecipe={this.editRecipe}
               />
+            )}
+          />
+          <Route
+            path="/sign-up"
+            exact
+            render={(props) => (
+              <SignUp {...props} />
             )}
           />
         </Switch>
