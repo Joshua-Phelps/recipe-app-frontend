@@ -54,7 +54,9 @@ class Details extends Component {
     }
 
     render() {
-        const recipe = this.props.recipe   
+        const recipe = this.props.recipe  
+        const token = localStorage.getItem("token")
+        const id = this.props.match.params.id;
             return ( 
                 <div>
                     {recipe ? (       
@@ -71,15 +73,15 @@ class Details extends Component {
                                     {recipe.ingredients.map(ingredient => {
                                         return <div className="item"><li>{ingredient.ing_name.charAt(0).toUpperCase() + ingredient.ing_name.slice(1)}, {ingredient.amount}</li></div>
                                         })}
-                                        {/* {this.renderIngredients(this.getRecipes())} */}
                                 </div>
-                                {/* {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button> : null } */}
-                            {/* {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button onClick={this.handleDelete}>Delete</Button> : null } */}
+                                {token ? <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button> : null }
+                                {token ? <Button onClick={this.handleDelete}>Delete</Button> : null }
                             </Item.Content>
                         </Item>
 
                         <Item>
                             <Item.Content>
+                                    {token ? <Button>Add To Favorites</Button>: null}
                                 <Item.Meta>
                                     <span className='area' style={{ fontWeight: "bold" }}>Area: {recipe.area} </span>
                                 </Item.Meta>
@@ -87,7 +89,6 @@ class Details extends Component {
                                     <span className='category' style={{ fontWeight: "bold" }}>Category: {recipe.category}</span>
                                 </Item.Meta>
                                 <Item.Meta >
-                                    {/* <span className='rating' style={{ fontWeight: "bold" }}>Rating:{recipe.rating}</span> */}
                                     <Rating icon='star' onRate={this.handleRating} defaultRating={recipe.rating} maxRating={5} />
                                 </Item.Meta><br></br>
 

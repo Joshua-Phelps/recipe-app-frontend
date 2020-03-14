@@ -18,28 +18,29 @@ class RecipeEditForm extends Component {
     }
 
     componentDidMount(){
-        const id = this.props.match.params.id
-        const filteredRec =  this.props.recipes.filter(r => r.recipe.id === parseInt(id) )
-        console.log(filteredRec)
-        if (filteredRec[0]) {
-            let ingArray = filteredRec[0].ingredients.map(ing => {
-                return {ingName: ing.ing_name ,amount: ''}
-            })
-            this.setState({
-                title: filteredRec[0].recipe.title,
-                image: filteredRec[0].recipe.img,
-                area: filteredRec[0].recipe.area,
-                category: filteredRec[0].recipe.category,
-                directions: filteredRec[0].recipe.directions,
-                ingredients: ingArray,
-                rating: filteredRec[0].recipe.directions 
-            })
-            filteredRec[0].ingredients.map(ing => {
-                return {ing_name: ing.ing_name ,amount: ''}
-            })
-        } else {
-            this.props.history.push(`/recipe-details/${id}`)
-        }
+        const id = this.props.match.params.id;
+        const recipe = this.props.onSelectRecipe(id)
+        // const id = this.props.match.params.id
+        // const filteredRec =  this.props.recipes.filter(r => r.recipe.id === parseInt(id) )
+        // if (filteredRec[0]) {
+        //     let ingArray = filteredRec[0].ingredients.map(ing => {
+        //         return {ingName: ing.ing_name ,amount: ''}
+        //     })
+        //     this.setState({
+        //         title: filteredRec[0].recipe.title,
+        //         image: filteredRec[0].recipe.img,
+        //         area: filteredRec[0].recipe.area,
+        //         category: filteredRec[0].recipe.category,
+        //         directions: filteredRec[0].recipe.directions,
+        //         ingredients: ingArray,
+        //         rating: filteredRec[0].recipe.directions 
+        //     })
+        //     filteredRec[0].ingredients.map(ing => {
+        //         return {ing_name: ing.ing_name ,amount: ''}
+        //     })
+        // } else {
+        //     this.props.history.push(`/recipe-details/${id}`)
+        // }
     }
 
     handleChange = (e) => {
@@ -70,7 +71,8 @@ class RecipeEditForm extends Component {
     }
 
     render() {
-        const { title, image, area, category, directions, ingredients } = this.state
+        // const { title, image, area, category, directions, ingredients } = this.state.recipe
+        const recipe = this.props.recipe
         const categories = [
             { key: 1, text: 'Vegetarian', value: 'Vegetarian' },
             { key: 2, text: 'Dessert', value: 'Dessert' },
@@ -89,21 +91,23 @@ class RecipeEditForm extends Component {
         ]
 
         return (
+            <div>
+            {recipe ? (
           <Form style={{ padding: "10px" }}onSubmit={e => this.handleSubmit(e)} onChange={this.handleChange}>
             <Form.Group widths='equal'>
             <lable style={{ paddingRight:"10px" }} >
                 Title:
-                <input type="text" value={title} name="title" placeholder='Title' />
+                <input type="text" value={recipe.title} name="title" placeholder='Title' />
             </lable>
             
             <lable style={{ paddingRight:"10px" }}>
                 Image:
-                <input type="text" name="image" value={image} placeholder='Image' />
+                <input type="text" name="image" value={recipe.image} placeholder='Image' />
             </lable>
 
             <lable style={{ paddingRight:"10px" }} >
                 Region:
-                <input type="text" name="area" value={area} placeholder='region' />
+                <input type="text" name="area" value={recipe.area} placeholder='region' />
             </lable>
 
             <lable style={{ paddingRight:"10px" }} >
@@ -115,17 +119,19 @@ class RecipeEditForm extends Component {
             
             <lable style={{ paddingRight:"10px" }} >
                   Directions:
-                  <textarea name="directions" value={directions} placeholder='Directions' />
+                  <textarea name="directions" value={recipe.directions} placeholder='Directions' />
             </lable>
 
             <Form.Group widths='equal'>
                 <Button type='button' onClick={this.addIngredientInput}>Add Ingredient</Button>
-                <AddIngredientEditForm ingredients={this.state.ingredients} />
+                <AddIngredientEditForm ingredients={recipe.ingredients} />
             </Form.Group>
 
                 <br></br>
             <Button type='submit'>Submit</Button>
             </Form>
+            ) : (null)}
+            </div>
         )
     }
 }

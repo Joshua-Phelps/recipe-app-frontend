@@ -20,6 +20,7 @@ class MyPage extends Component {
 
     render() {
         const { activeItem } = this.state
+        const { recipes, favorite_recipes } = this.props.user
         return (
             <div>
                 <Menu attached='top' tabular>
@@ -41,8 +42,8 @@ class MyPage extends Component {
                 </Menu>
 
                 <Segment attached='bottom'>
-                    {(this.state.activeItem === 'My Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails}  recipes={this.props.ownedRecipes} /> : null }
-                    {(this.state.activeItem === 'Favorite Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails} recipes={this.props.favoriteRecipes} /> : null }
+                    {(this.state.activeItem === 'My Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails}  recipes={recipes} /> : null }
+                    {(this.state.activeItem === 'Favorite Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails} recipes={favorite_recipes} /> : null }
                     {(this.state.activeItem === 'Add Recipes') ? <RecipeForm user={this.props.user} onMakeNewRecipe={this.props.onMakeNewRecipe} myProps={this.props.myProps} /> : null }
 
                 </Segment>

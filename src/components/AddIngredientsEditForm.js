@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 class AddIngredientForm extends Component {
 
   render() {
-
+      {console.log(this.props.ingredients)}
         return (
             this.props.ingredients.map((val, idx)=> {
               let ingId = `ing-${idx}`
@@ -25,7 +25,8 @@ class AddIngredientForm extends Component {
                     name={amountId}
                     data-id={idx}
                     id={amountId}
-                    value={this.props.ingredients[idx].amount} 
+                    // value={this.props.ingredients[idx].amount} 
+                    value={'test'} 
                     className="amount"
                   />
                 </div>

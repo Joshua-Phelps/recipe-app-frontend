@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, Form, Grid, Header, Image, Message, Segment, Container } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import logo2 from '../images/logo-small.png'
+import { api } from '../services/api'
 
 class LoginForm extends Component {
 
@@ -15,15 +16,8 @@ class LoginForm extends Component {
 
     handleLogin = () => {
         this.props.onLogin(this.state)
-        // console.log(JSON.parse(localStorage.getItem("user")))
-        setTimeout(() => {
-            if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id){
-                this.props.history.push('/my-page')
-            } else {    
-                this.props.history.push('/login')
-                this.setState({ password: ''})
-            }
-        }, 1000)
+        this.props.history.push('/my-page')
+        this.setState({username: '', password: ''})
     }
 
     handleChange = e => {

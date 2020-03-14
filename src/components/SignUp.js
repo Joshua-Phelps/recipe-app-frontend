@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Segment, Button, Grid, Header, Image, Container } from 'semantic-ui-react'
 import logo2 from '../images/logo-small.png'
+import { api } from '../services/api'
 
 class SignUp extends Component {
 
@@ -17,14 +18,15 @@ class SignUp extends Component {
     }
 
     handleSignUp = () => {
-        fetch('http://localhost:3000/users', {
-            method: "POST",
-            headers: {
-                "Content-Type": 'application/json',
-                Accept: 'application/json'
-            },
-            body: JSON.stringify(this.state)
-        }).then(() => this.props.history.push('/login'))
+        api.auth.signUp(this.state).then(data => console.log(data))
+        // fetch('http://localhost:3000/users', {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": 'application/json',
+        //         Accept: 'application/json'
+        //     },
+        //     body: JSON.stringify(this.state)
+        // }).then(() => this.props.history.push('/login'))
     }
 
     render() {

@@ -16,7 +16,7 @@ class AddIngredientForm extends Component {
                     name={ingId}
                     data-id={idx}
                     id={ingId}
-                    value={this.props.ingredients[idx].ingName} 
+                    value={this.props.ingredients[idx].ing_name} 
                     className="ingName"
                   />
                   <label htmlFor={amountId}>{`Amount`}</label>

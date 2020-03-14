@@ -13,18 +13,18 @@ import RecipeForm from './components/RecipeForm'
 import SignUp from './components/SignUp'
 
 class App extends Component {
-  state = {
-    auth: {
-      user: {
-        username: '',
-        id: null,
-        favoriteRecipes: [],
-        ownedRecipes: []
-      },
+  INITIAL_STATE = {
+    user: {
+      username: '',
+      id: null,
+      favoriteRecipes: [],
+      ownedRecipes: []
     },
     allRecipes: [],
     selectedRecipeId: false 
   }
+  
+  state = this.INITIAL_STATE
   // state = {
   //   allRecipes: [],
   //   myRecipes: { owned_recipes: [], favorite_recipes: [] },
@@ -45,22 +45,19 @@ class App extends Component {
       api.auth.getCurrentUser().then(user => {
         console.log(user)
         if (user.error) return alert(user.error)
-        const updatedState = { ...this.state.auth, user: user };
         this.setState({ 
-          auth: updatedState,
+          user: user,
          });
       })
     } 
-    // this.fetchRecipes();
-    // if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id) {
-    //     this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id);
-    // }
   }
 
-  login = data => {
-    const updatedState = { ...this.state.auth, user: data.user }
-    localStorage.setItem("token", data.jwt);
-    this.setState({ auth: updatedState });
+  login = user => {
+    api.auth.login(user)
+    .then(data => {
+      localStorage.setItem("token", data.jwt);
+      this.setState({...this.state, user: data.user})
+    })
   };
 
   logout = () => {
@@ -318,6 +315,7 @@ class App extends Component {
           user={this.state.user}
           category={this.state.category}
           area={this.state.area}
+          onLogout={this.logout}
         />
         <Switch>
           {localStorage.length !== 0 ? (
@@ -330,8 +328,6 @@ class App extends Component {
                   myProps={props}
                   onMakeNewRecipe={this.makeNewRecipe}
                   onShowDetails={this.showDetails}
-                  // favoriteRecipes={favoriteRecipes}
-                  // ownedRecipes={ownedRecipes}
                   user={this.state.user}
                 />
               )}
@@ -383,7 +379,9 @@ class App extends Component {
             render={props => (
               <RecipeEditForm
                 {...props}
-                recipes={this.state.myRecipes.owned_recipes}
+                // recipes={this.state.myRecipes.owned_recipes}
+                recipe={this.selectedRecipe()}
+                onSelectRecipe={this.selectRecipe}
                 onEditRecipe={this.editRecipe}
                 updateEditComponent={this.updateEditComponent}
               />

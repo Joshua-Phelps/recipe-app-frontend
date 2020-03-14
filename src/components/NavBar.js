@@ -5,12 +5,6 @@ import logo2 from '../images/logo-small.png'
 
 class NavBar extends Component{
 
-  handleLogin = () => {
-    if (JSON.parse(localStorage.getItem("user"))) {
-      localStorage.clear()
-    } 
-    this.props.onClearLoggedIn()
-  }
 
   uniqCategories = () => {
     // const uniq = this.props.recipes.map(recipe => recipe.recipe.category).filter((v, i, a) => a.indexOf(v) === i).sort().map(category => category)
@@ -39,6 +33,7 @@ class NavBar extends Component{
   }
   
   render() {    
+    const token = localStorage.getItem("token")
 
     return(
       <div className="nav-bar">       
@@ -69,7 +64,7 @@ class NavBar extends Component{
           </Menu.Item>
 
           <Menu.Item>
-    {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Image src={logo2} width="130px" centered/> : null}
+            {token ? <Image src={logo2} width="130px" centered/> : null}
           </Menu.Item>
               <div className="right menu">
         <Menu>
@@ -78,11 +73,11 @@ class NavBar extends Component{
             </Menu.Item>
             
             <Menu.Item floated='right'>
-    {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button ><Link to="/my-page">{this.props.user.username !== ''? `${this.props.user.username}'s Page` : 'My Page'}</Link></Button> : null }
+              <Button ><Link to="/my-page">{token ? `${this.props.user.username}'s Page` : 'My Page'}</Link></Button>
             </Menu.Item>
 
             <Menu.Item floated='right'>
-              <Button onClick={this.handleLogin} >{JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Link to="/">Log Out</Link> : <Link to="/login">Log In</Link> }</Button>
+              {token ? <Button onClick={this.props.onLogout}><Link to="/">Log Out</Link></Button> : <Button><Link to="/login">Log In</Link></Button> }
             </Menu.Item>
         </Menu>
           </div>
