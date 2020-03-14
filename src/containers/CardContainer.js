@@ -13,7 +13,7 @@ class CardContainer extends Component {
             return this.props.recipes.map(recipe => {
                 return (
                 <div style={{ paddingRight:"10px", paddingTop:"10px" }}>
-                    <RecipeCard onShowDetails={this.props.onShowDetails}  recipe={recipe} />
+                    <RecipeCard onShowDetails={this.props.onShowDetails} recipe={recipe} />
                 </div>
                 )
             })

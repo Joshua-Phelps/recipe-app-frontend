@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import 'semantic-ui-css/semantic.min.css';
+import { api } from "./services/api";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import "./App.css";
 import MainPage from "./components/MainPage";
@@ -14,29 +14,69 @@ import SignUp from './components/SignUp'
 
 class App extends Component {
   state = {
+    auth: {
+      user: {
+        username: '',
+        id: null,
+        favoriteRecipes: [],
+        ownedRecipes: []
+      },
+    },
     allRecipes: [],
-    myRecipes: { owned_recipes: [], favorite_recipes: [] },
-    loggedIn: false,
-    selectedRecipe: false,
-    user_id: null,
-    search: "",
-    category: "",
-    area: "",
-    user: { id: null, username: ''}
-  };
+    selectedRecipeId: false 
+  }
+  // state = {
+  //   allRecipes: [],
+  //   myRecipes: { owned_recipes: [], favorite_recipes: [] },
+  //   loggedIn: false,
+  //   selectedRecipe: false,
+  //   user_id: null,
+  //   search: "",
+  //   category: "",
+  //   area: "",
+  //   user: { id: null, username: ''},
+  //   updateEdit: 0, 
+  // };
 
   componentDidMount() {
-    this.fetchRecipes();
-    if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id) {
-        this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id);
-    }
+    api.recipes.allRecipes().then(recipes => this.setState({ ...this.state, allRecipes: recipes}))
+    const token = localStorage.getItem("token");
+    if (token) {
+      api.auth.getCurrentUser().then(user => {
+        console.log(user)
+        if (user.error) return alert(user.error)
+        const updatedState = { ...this.state.auth, user: user };
+        this.setState({ 
+          auth: updatedState,
+         });
+      })
+    } 
+    // this.fetchRecipes();
+    // if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id) {
+    //     this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id);
+    // }
   }
 
-  fetchRecipes = () => {
-    fetch("http://localhost:3000/recipes")
-      .then(res => res.json())
-      .then(data => this.setState({ allRecipes: data, user: JSON.parse(localStorage.getItem("user")) }));
+  login = data => {
+    const updatedState = { ...this.state.auth, user: data.user }
+    localStorage.setItem("token", data.jwt);
+    this.setState({ auth: updatedState });
   };
+
+  logout = () => {
+    localStorage.removeItem("token");
+    this.setState(this.INITIAL_STATE)
+  };
+  // fetchRecipes = () => {
+  //   fetch("http://localhost:3000/recipes")
+  //     .then(res => res.json())
+  //     .then(data => this.setState({ allRecipes: data, user: JSON.parse(localStorage.getItem("user")) }));
+  // };
+
+  selectRecipe = (id) => {
+    this.setState({...this.state, selectedRecipeId: parseInt(id, 10)})
+  }
+
 
   fetchMyRecipes = id => {
     return fetch(`http://localhost:3000/users/${id}`)
@@ -50,6 +90,12 @@ class App extends Component {
         })
       );
   };
+
+  updateEditComponent = () => {
+    this.setState(prevState => (
+      {updateEdit: prevState.updateEdit+1})
+    )
+  }
 
   changeRating = (rating, id) => {
     fetch(`http://localhost:3000/recipes/${id}`, {
@@ -206,46 +252,60 @@ class App extends Component {
     this.setState({loggedIn: false})
   }
 
-  login = userInfo => {
-    console.log(userInfo);
-    fetch("http://localhost:3000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify(userInfo)
-    })
-      .then(res => res.json())
-      .then(json => localStorage.setItem("user", JSON.stringify(json)))
-      // .then(json => {
-      //   console.log(localStorage);
-      //   return json;
-      // })
-      .then(() => {
-        if(JSON.parse(localStorage.getItem("user")).id) {
-          this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
-          this.setState({user: JSON.parse(localStorage.getItem("user"))})
-        } else {
-          alert ("Wrong info!")
-        }
-    })
-  };
+  selectedRecipe = () => {
+    if (this.state.selectedRecipeId) {
+      return this.state.allRecipes.filter(r => r.id === this.state.selectedRecipeId)[0]
+    } else {
+      return {
+        title: '',
+        id: '',
+        img: '',
+        directions: '',
+        ingredients: [{ing_name: '', amount: ''}],
+        rating: '',
+        area: '',
+        category: ''
+      }
+    }
+  }
+
+  // login = userInfo => {
+  //   console.log(userInfo);
+  //   fetch("http://localhost:3000/login", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json"
+  //     },
+  //     body: JSON.stringify(userInfo)
+  //   })
+  //     .then(res => res.json())
+  //     .then(json => localStorage.setItem("user", JSON.stringify(json)))
+  //     // .then(json => {
+  //     //   console.log(localStorage);
+  //     //   return json;
+  //     // })
+  //     .then(() => {
+  //       if(JSON.parse(localStorage.getItem("user")).id) {
+  //         this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
+  //         this.setState({user: JSON.parse(localStorage.getItem("user"))})
+  //       } else {
+  //         alert ("Wrong info!")
+  //       }
+  //   })
+  // };
 
   render() {
-    console.log("all recipes:", this.state.allRecipes.length);
-    console.log("owned:", this.state.myRecipes.owned_recipes.length);
-    console.log("favorite:", this.state.myRecipes.favorite_recipes);
 
-    const allRecipes = this.state.allRecipes.filter(r => {
-      return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
-    });
-    const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r => {
-      return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
-    });
-    const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r => {
-      return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
-    });
+    // const allRecipes = this.state.allRecipes.filter(r => {
+    //   return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
+    // });
+    // const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r => {
+    //   return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
+    // });
+    // const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r => {
+    //   return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
+    // });
     return (
       <Router>
         <NavBar
@@ -270,8 +330,8 @@ class App extends Component {
                   myProps={props}
                   onMakeNewRecipe={this.makeNewRecipe}
                   onShowDetails={this.showDetails}
-                  favoriteRecipes={favoriteRecipes}
-                  ownedRecipes={ownedRecipes}
+                  // favoriteRecipes={favoriteRecipes}
+                  // ownedRecipes={ownedRecipes}
                   user={this.state.user}
                 />
               )}
@@ -295,7 +355,10 @@ class App extends Component {
             path="/"
             exact
             render={() => (
-              <MainPage recipes={allRecipes} onShowDetails={this.showDetails} />
+              <MainPage 
+              // recipes={allRecipes} 
+              recipes={this.state.allRecipes}
+              onShowDetails={this.showDetails} />
             )}
           />
 
@@ -309,6 +372,8 @@ class App extends Component {
                 onFavorites={this.addToFavorites}
                 deleteRecipe={this.deleteRecipe}
                 onChangeRating={this.changeRating}
+                onSelectRecipe={this.selectRecipe}
+                recipe={this.selectedRecipe()}
               />
             )}
           />
@@ -320,6 +385,7 @@ class App extends Component {
                 {...props}
                 recipes={this.state.myRecipes.owned_recipes}
                 onEditRecipe={this.editRecipe}
+                updateEditComponent={this.updateEditComponent}
               />
             )}
           />

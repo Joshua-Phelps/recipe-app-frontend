@@ -3,27 +3,35 @@ import { Item, Rating, Button } from 'semantic-ui-react'
 import { Redirect } from "react-router-dom";
 import { Link } from 'react-router-dom';
 
+// export default function Details (props) {
+
+//     useEffect(() => {
+//         props.onSelectRecipe(props.match.params.id)
+//     }, [])
+
+//     const recipe = () => {
+//         props.recipes.filter(r => r.id === props.match.params.id)
+//     }
+
+//     return (
+//         <div>
+//             {console.log(props.recipe)}
+//         </div>
+//     )
+// }
+
 class Details extends Component {
+
+
+    componentDidMount(){
+        const id = this.props.match.params.id;
+        const recipe = this.props.onSelectRecipe(id)
+    }
+
 
     handleRating = (e, { rating }) => {
         const id = this.props.match.params.id
         this.props.onChangeRating(rating, id)
-    }
-
-    getRecipes = () => {
-        const id = this.props.match.params.id;
-        let foundRecipe = { 
-            recipe: {
-                title: "", img: "", area: "", category: "", rating: "", id: null, directions: ""
-            },
-            ingredients: []
-        }
-        const filteredRec =  this.props.recipes.filter(r => r.recipe.id === parseInt(id) )
-        if (filteredRec) {
-            return foundRecipe = filteredRec;
-        } else {
-            return foundRecipe;
-        }
     }
 
     listIngredients = () => {
@@ -32,18 +40,11 @@ class Details extends Component {
         })
     }
 
-    renderInfo = (recipeObj, attr ) => {
-        if (recipeObj[0]){
-            return recipeObj[0].recipe[attr]
-        }
-    }
 
-    renderIngredients = (recipeObj) => {
-        if (recipeObj[0]){
-            return recipeObj[0].ingredients.map(ing => {
-                return (<div className="item"><li>{ing.ing_name.charAt(0).toUpperCase() + ing.ing_name.slice(1)}</li></div>)
-            })
-        }
+    renderIngredients = () => {
+        return this.props.recipe.indredients.map(ing => {
+            return <div className="item"><li>{ing.ing_name.charAt(0).toUpperCase() + ing.ing_name.slice(1), ing.amount}</li></div>
+        })
     }
 
     handleDelete = () => {
@@ -53,65 +54,63 @@ class Details extends Component {
     }
 
     render() {
-        if (!this.renderInfo(this.getRecipes(), "title")){
-            return this.getRecipes()
-        } else {
-            const title = this.renderInfo(this.getRecipes(), "title")
-            const directions = this.renderInfo(this.getRecipes(), "directions")
-            const img = this.renderInfo(this.getRecipes(), "img")
-            const area = this.renderInfo(this.getRecipes(), "area")
-            const category = this.renderInfo(this.getRecipes(), "category")
-            const rating = this.renderInfo(this.getRecipes(), "rating")
-            const id = this.renderInfo(this.getRecipes(), "id")
+        const recipe = this.props.recipe   
             return ( 
-            <> 
-            <Link to={`recipe-details/${id}`} />          
-            <Item.Group style={{ marginLeft: '2.8rem', padding: "20px" }}>
-                <Item>
-                    <Item.Header as='h2'>{title}</Item.Header><br></br>
-                </Item>
+                <div>
+                    {recipe ? (       
+                        <Item.Group style={{ marginLeft: '2.8rem', padding: "20px" }}>
+                        <Item>
+                            <Item.Header as='h2'>{recipe.title}</Item.Header><br></br>
+                        </Item>
 
-                <Item>
-                    <Item.Image size='medium' src={img} />
-                    <Item.Content>
-                        <div className="ui bulleted list">
-                            <h3>Ingredients:</h3>
-                                {this.renderIngredients(this.getRecipes())}
-                        </div>
-                        {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button> : null }
-                    {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button onClick={this.handleDelete}>Delete</Button> : null }
-                    </Item.Content>
-                </Item>
+                        <Item>
+                            <Item.Image size='medium' src={recipe.img} />
+                            <Item.Content>
+                                <div className="ui bulleted list">
+                                    <h3>Ingredients:</h3>
+                                    {recipe.ingredients.map(ingredient => {
+                                        return <div className="item"><li>{ingredient.ing_name.charAt(0).toUpperCase() + ingredient.ing_name.slice(1)}, {ingredient.amount}</li></div>
+                                        })}
+                                        {/* {this.renderIngredients(this.getRecipes())} */}
+                                </div>
+                                {/* {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button> : null } */}
+                            {/* {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <Button onClick={this.handleDelete}>Delete</Button> : null } */}
+                            </Item.Content>
+                        </Item>
 
-                <Item>
-                    <Item.Content>
-                        <Item.Meta>
-                            <span className='area' style={{ fontWeight: "bold" }}>Area: {area}</span>
-                        </Item.Meta>
-                        <Item.Meta>
-                            <span className='category' style={{ fontWeight: "bold" }}>Category: {category}</span>
-                        </Item.Meta>
-                        <Item.Meta >
-                            <span className='rating' style={{ fontWeight: "bold" }}>Rating: </span>
-                            <Rating icon='star' onRate={this.handleRating} defaultRating={rating} maxRating={5} />
-                        </Item.Meta><br></br>
+                        <Item>
+                            <Item.Content>
+                                <Item.Meta>
+                                    <span className='area' style={{ fontWeight: "bold" }}>Area: {recipe.area} </span>
+                                </Item.Meta>
+                                <Item.Meta>
+                                    <span className='category' style={{ fontWeight: "bold" }}>Category: {recipe.category}</span>
+                                </Item.Meta>
+                                <Item.Meta >
+                                    {/* <span className='rating' style={{ fontWeight: "bold" }}>Rating:{recipe.rating}</span> */}
+                                    <Rating icon='star' onRate={this.handleRating} defaultRating={recipe.rating} maxRating={5} />
+                                </Item.Meta><br></br>
 
-                        <Item.Description>
-                            <div className="ui bulleted list">
-                                <h3>Directions:</h3> 
-                                    {directions.split("\n").map((direction,key) => {
-                                        return <div className="item"><li key={key}>{direction}</li></div>
-                                    })}
-                            </div>
-                        </Item.Description><br></br>
-                            <button className="fluid ui button" onClick={() => {this.props.onFavorites(id, JSON.parse(localStorage.getItem('user')).id)}}>Add to My Favorites</button>
-                    </Item.Content> <br></br>
-                </Item>
-            </Item.Group>
-            </> 
-        )
-        }
+                                <Item.Description>
+                                    <div className="ui bulleted list">
+                                        <h3>Directions:</h3> 
+                                            {recipe.directions.split("\n").map((direction,key) => {
+                                                return <div className="item"><li key={key}>{direction}</li></div>
+                                            })}
+                                    </div>
+                                </Item.Description><br></br>
+                                {/* {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <button className="fluid ui button" onClick={() => {this.props.onFavorites(id, JSON.parse(localStorage.getItem('user')).id)}}>Add to My Favorites</button> : null } */}
+                                    {/* <button className="fluid ui button" onClick={() => {this.props.onFavorites(id, JSON.parse(localStorage.getItem('user')).id)}}>Add to My Favorites</button> */}
+                            </Item.Content> <br></br>
+                        </Item>
+                    </Item.Group>
+                ): (null) }
+            </div>
+         )
+        
     }
 }
 
 export default Details
+
+

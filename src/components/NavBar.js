@@ -13,15 +13,15 @@ class NavBar extends Component{
   }
 
   uniqCategories = () => {
-    const uniq = this.props.recipes.map(recipe => recipe.recipe.category).filter((v, i, a) => a.indexOf(v) === i).sort().map(category => category)
-      uniq.splice(0, 1, "All")
-      return uniq.map(category => <div className="item"><li>{category}</li></div>)
+    // const uniq = this.props.recipes.map(recipe => recipe.recipe.category).filter((v, i, a) => a.indexOf(v) === i).sort().map(category => category)
+    //   uniq.splice(0, 1, "All")
+    //   return uniq.map(category => <div className="item"><li>{category}</li></div>)
   }
 
   uniqAreas = () => {
-    const uniq = this.props.recipes.map(recipe => recipe.recipe.area).filter((v, i, a) => a.indexOf(v) === i).sort().map(area => area)
-      uniq.splice(0, 1, "All")
-      return uniq.map(area => <div className="item"><li>{area}</li></div>)
+    // const uniq = this.props.recipes.map(recipe => recipe.recipe.area).filter((v, i, a) => a.indexOf(v) === i).sort().map(area => area)
+    //   uniq.splice(0, 1, "All")
+    //   return uniq.map(area => <div className="item"><li>{area}</li></div>)
   }
 
   handleCategorySelect = (e) => {

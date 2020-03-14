@@ -65,6 +65,7 @@ class RecipeEditForm extends Component {
     handleSubmit = e => {
         const id = this.props.match.params.id
         this.props.onEditRecipe(this.state, id)
+        this.props.updateEditComponent()
         this.props.history.push(`/recipe-details/${id}`)
     }
 

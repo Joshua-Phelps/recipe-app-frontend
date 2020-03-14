@@ -14,9 +14,11 @@ handleShowDetails = () => {
 
         return (
             <div className="cards" onClick={() => this.handleShowDetails()} >
-                    <Link to={`/recipe-details/${recipe.id}`} >
-                    <Card raised image={recipe.img} header={recipe.title} />
+                {this.props.recipe ? (
+                    <Link to={`/recipe-details/${this.props.recipe.id}`} >
+                        <Card raised image={this.props.recipe.img} header={this.props.recipe.title} />
                     </Link>
+                ) : null }
                 </div>
         )
     }
