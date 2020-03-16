@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Item, Rating, Button } from 'semantic-ui-react'
 import { Redirect } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import { api } from '../services/api';
 
 // export default function Details (props) {
 
@@ -25,7 +26,7 @@ class Details extends Component {
 
     componentDidMount(){
         const id = this.props.match.params.id;
-        const recipe = this.props.onSelectRecipe(id)
+        this.props.onSelectRecipe(id)
     }
 
 
@@ -53,8 +54,20 @@ class Details extends Component {
         this.props.history.push('/my-page')
     }
 
+    handleAddFavorite = () => {
+        console.log('adding')
+        api.recipes.addFavorite(this.props.recipe.id, this.props.userId)
+        .then(data => this.props.onAddToFavorites(data.recipe_id))
+    }
+
+    handleRemoveFavorite = () => {
+        api.recipes.removeFavorite(this.props.recipe.id, this.props.userId)
+        .then(recipeId => this.props.onRemoveFromFavorites(recipeId))
+    }
+
     render() {
-        const recipe = this.props.recipe  
+        const recipe = this.props.recipe 
+        const { isOwned, isFavorite } = this.props 
         const token = localStorage.getItem("token")
         const id = this.props.match.params.id;
             return ( 
@@ -74,14 +87,18 @@ class Details extends Component {
                                         return <div className="item"><li>{ingredient.ing_name.charAt(0).toUpperCase() + ingredient.ing_name.slice(1)}, {ingredient.amount}</li></div>
                                         })}
                                 </div>
-                                {token ? <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button> : null }
-                                {token ? <Button onClick={this.handleDelete}>Delete</Button> : null }
+                                {token && isOwned ? <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button> : null }
+                                {token && isOwned ? <Button onClick={this.handleDelete}>Delete</Button> : null }
                             </Item.Content>
                         </Item>
 
                         <Item>
                             <Item.Content>
-                                    {token ? <Button>Add To Favorites</Button>: null}
+                                    {token ? ( 
+                                        isFavorite ? <Button onClick={this.handleRemoveFavorite}>Remove from Favorites</Button> : <Button onClick={this.handleAddFavorite}>Add To Favorites</Button>
+                                    ) : (
+                                        <Button>Remove from Favorites</Button>
+                                    )}
                                 <Item.Meta>
                                     <span className='area' style={{ fontWeight: "bold" }}>Area: {recipe.area} </span>
                                 </Item.Meta>
@@ -100,8 +117,6 @@ class Details extends Component {
                                             })}
                                     </div>
                                 </Item.Description><br></br>
-                                {/* {JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id ? <button className="fluid ui button" onClick={() => {this.props.onFavorites(id, JSON.parse(localStorage.getItem('user')).id)}}>Add to My Favorites</button> : null } */}
-                                    {/* <button className="fluid ui button" onClick={() => {this.props.onFavorites(id, JSON.parse(localStorage.getItem('user')).id)}}>Add to My Favorites</button> */}
                             </Item.Content> <br></br>
                         </Item>
                     </Item.Group>

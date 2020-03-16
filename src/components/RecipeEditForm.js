@@ -1,60 +1,84 @@
 import React, { Component } from 'react'
 import AddIngredientEditForm from './AddIngredientForm'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
+import { api } from '../services/api';
 
 class RecipeEditForm extends Component {
 
     constructor(){
         super()
         this.state = {
+            id: null,
             title: '',
-            image: '',
+            img: '',
             area: '',
             category: '',
             directions: '',
             ingredients: [{ingName: "", amount: ""}],
-            rating: 0
+            rating: 0,
+            hasChanged: false
         }
     }
 
     componentDidMount(){
-        const id = this.props.match.params.id;
-        const recipe = this.props.onSelectRecipe(id)
-        // const id = this.props.match.params.id
-        // const filteredRec =  this.props.recipes.filter(r => r.recipe.id === parseInt(id) )
-        // if (filteredRec[0]) {
-        //     let ingArray = filteredRec[0].ingredients.map(ing => {
-        //         return {ingName: ing.ing_name ,amount: ''}
-        //     })
-        //     this.setState({
-        //         title: filteredRec[0].recipe.title,
-        //         image: filteredRec[0].recipe.img,
-        //         area: filteredRec[0].recipe.area,
-        //         category: filteredRec[0].recipe.category,
-        //         directions: filteredRec[0].recipe.directions,
-        //         ingredients: ingArray,
-        //         rating: filteredRec[0].recipe.directions 
-        //     })
-        //     filteredRec[0].ingredients.map(ing => {
-        //         return {ing_name: ing.ing_name ,amount: ''}
-        //     })
-        // } else {
-        //     this.props.history.push(`/recipe-details/${id}`)
-        // }
+        const id = this.props.match.params.id
+        this.props.onSelectRecipe(id)
     }
 
-    handleChange = (e) => {
-        if (e.target.className === 'ingName' || e.target.className === 'amount'  ){
-            let ingredients = [...this.state.ingredients]
-            ingredients[e.target.dataset.id][e.target.className] = e.target.value
-            this.setState({ ingredients }, () => console.log(this.state.ingredients))
+    handleIngredients = (e) => {
+        if (e.target.className === 'ing_name' || e.target.className === 'amount'  ){
+            const id =  parseInt(e.target.dataset.id, 10)
+            this.setState(prevState => ({
+                ...prevState,
+                ingredients: prevState.ingredients.map((ing, idx )=> {
+                    if (idx === id){
+                        ing[e.target.className] = e.target.value
+                        return ing
+                    }else {
+                        return ing 
+                    }
+                })
+             }))
         } else {
             this.setState({ [e.target.name]: e.target.value })
         } 
     }
 
+    handleChange = (e) => {
+        e.persist()
+        if (!this.state.hasChanged){
+            const {title, img, directions, category, id, area, ingredients, rating} = this.props.recipe
+            const hasChanged = true
+            if (e.target.className === 'ing_name' || e.target.className === 'amount' ){
+                const selectedIdx =  parseInt(e.target.dataset.id, 10)
+                this.setState({
+                    title, img, directions, category, area, id, rating, hasChanged,
+                    ingredients: ingredients.map((ing, idx )=> {
+                        if (idx === selectedIdx){
+                            ing[e.target.className] = e.target.value
+                            return ing
+                        } else {
+                            return ing 
+                        }
+                    })
+                })
+            } else {
+                this.setState({ [e.target.name]: e.target.value })
+            }
+        } else {
+            this.handleIngredients(e)
+        }
+    }
+
     handleCategoryChange = (e, value) => {
-        this.setState({ category: value.value })
+        const category = value.value
+        if (!this.state.hasChanged) {
+            const {title, img, directions, id, area, ingredients, rating} = this.props.recipe
+            const hasChanged = true 
+            this.setState({title, img, directions, area, id, rating, category, hasChanged, ingredients})
+        } else {
+            this.setState({ category })    
+        }
     }
 
     addIngredientInput = (e) => {
@@ -64,15 +88,12 @@ class RecipeEditForm extends Component {
     }
 
     handleSubmit = e => {
-        const id = this.props.match.params.id
-        this.props.onEditRecipe(this.state, id)
-        this.props.updateEditComponent()
-        this.props.history.push(`/recipe-details/${id}`)
+        (this.state.hasChanged) ? (api.recipes.editRecipe(this.state)) : console.log('something')
     }
 
     render() {
-        // const { title, image, area, category, directions, ingredients } = this.state.recipe
         const recipe = this.props.recipe
+        const { title, img, area, category, directions, ingredients } = this.state
         const categories = [
             { key: 1, text: 'Vegetarian', value: 'Vegetarian' },
             { key: 2, text: 'Dessert', value: 'Dessert' },
@@ -97,34 +118,34 @@ class RecipeEditForm extends Component {
             <Form.Group widths='equal'>
             <lable style={{ paddingRight:"10px" }} >
                 Title:
-                <input type="text" value={recipe.title} name="title" placeholder='Title' />
+                <input type="text" value={ !title ? recipe.title : title} name="title" placeholder='Title' />
             </lable>
             
             <lable style={{ paddingRight:"10px" }}>
                 Image:
-                <input type="text" name="image" value={recipe.image} placeholder='Image' />
+                <input type="text" name="img" value={!img ? recipe.img : img} placeholder='Image' />
             </lable>
 
             <lable style={{ paddingRight:"10px" }} >
                 Region:
-                <input type="text" name="area" value={recipe.area} placeholder='region' />
+                <input type="text" name="area" value={!area ? recipe.area : area} placeholder='region' />
             </lable>
 
             <lable style={{ paddingRight:"10px" }} >
                 Category:{' '}
-                <Dropdown name="category" value={this.state.category} onSelect={this.handleCategoryChange} options={categories} placeholder='Choose Category' />
+                <Dropdown name="category" value={!category ? recipe.category : category } onChange={this.handleCategoryChange} options={categories} placeholder='Choose Category' />
             </lable>
 
             </Form.Group>
             
             <lable style={{ paddingRight:"10px" }} >
                   Directions:
-                  <textarea name="directions" value={recipe.directions} placeholder='Directions' />
+                  <textarea name="directions" value={!directions ? recipe.directions: directions} placeholder='Directions' />
             </lable>
 
             <Form.Group widths='equal'>
                 <Button type='button' onClick={this.addIngredientInput}>Add Ingredient</Button>
-                <AddIngredientEditForm ingredients={recipe.ingredients} />
+                <AddIngredientEditForm ingredients={this.state.hasChanged ? this.state.ingredients : recipe.ingredients} />
             </Form.Group>
 
                 <br></br>

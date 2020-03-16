@@ -13,6 +13,18 @@ import RecipeForm from './components/RecipeForm'
 import SignUp from './components/SignUp'
 
 class App extends Component {
+
+  BLANK_RECIPE = {
+    id: null,
+    title: '',
+    img: '',
+    directions: '',
+    area: '',
+    category: '',
+    rating: '',
+    ingredients: [{amount: '', ing_name: ''}]
+  }
+
   INITIAL_STATE = {
     user: {
       username: '',
@@ -43,7 +55,6 @@ class App extends Component {
     const token = localStorage.getItem("token");
     if (token) {
       api.auth.getCurrentUser().then(user => {
-        console.log(user)
         if (user.error) return alert(user.error)
         this.setState({ 
           user: user,
@@ -51,6 +62,8 @@ class App extends Component {
       })
     } 
   }
+
+
 
   login = user => {
     api.auth.login(user)
@@ -72,6 +85,27 @@ class App extends Component {
 
   selectRecipe = (id) => {
     this.setState({...this.state, selectedRecipeId: parseInt(id, 10)})
+  }
+
+  addToFavorites = (recipeId) => {
+    this.setState(prevState => ({
+      ...prevState, 
+      user: { 
+        ...prevState.user, 
+        favorite_recipes: [...prevState.user.favorite_recipes, recipeId]
+      }}))
+  }
+
+  removeFromFavorites = (id) => {
+    console.log(id)
+    const newFavorites = this.state.user.favorite_recipes.filter(recipeId => recipeId !== id)
+    console.log(newFavorites)
+    this.setState(prevState => ({
+      ...prevState, 
+      user: { 
+        ...prevState.user, 
+        favorite_recipes: newFavorites
+      }}))
   }
 
 
@@ -208,42 +242,42 @@ class App extends Component {
       })))
   }
 
-  addToFavorites = (recipeId, userId) => {
-    console.log(recipeId, userId);
-    fetch(`http://localhost:3000/user_recipes`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify({
-        recipe_id: recipeId,
-        user_id: userId
-      })
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (!data.error) {
-          this.setState(prevState => ({
-            myRecipes: {
-              favorite_recipes: [...prevState.myRecipes.favorite_recipes, data],
-              owned_recipes: prevState.myRecipes.owned_recipes
-            }
-          }))
-          alert("Recipe is successfully added to your favorites!")
-        } else if (data.destroyed) {
-          this.setState(prevState => ({
-            myRecipes: {
-              owned_recipes: [...prevState.myRecipes.owned_recipes],
-              favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.id !== data.id)
-            }
-          }))
-          alert("Recipe is successfully removed from your favorites!")
-        } else {
-          alert("You can not add your own recipe to favorites!")
-        }
-      });
-  };
+  // addToFavorites = (recipeId, userId) => {
+  //   console.log(recipeId, userId);
+  //   fetch(`http://localhost:3000/user_recipes`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json"
+  //     },
+  //     body: JSON.stringify({
+  //       recipe_id: recipeId,
+  //       user_id: userId
+  //     })
+  //   })
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       if (!data.error) {
+  //         this.setState(prevState => ({
+  //           myRecipes: {
+  //             favorite_recipes: [...prevState.myRecipes.favorite_recipes, data],
+  //             owned_recipes: prevState.myRecipes.owned_recipes
+  //           }
+  //         }))
+  //         alert("Recipe is successfully added to your favorites!")
+  //       } else if (data.destroyed) {
+  //         this.setState(prevState => ({
+  //           myRecipes: {
+  //             owned_recipes: [...prevState.myRecipes.owned_recipes],
+  //             favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.id !== data.id)
+  //           }
+  //         }))
+  //         alert("Recipe is successfully removed from your favorites!")
+  //       } else {
+  //         alert("You can not add your own recipe to favorites!")
+  //       }
+  //     });
+  // };
 
   clearLoggedIn = () => {
     this.setState({loggedIn: false})
@@ -251,20 +285,41 @@ class App extends Component {
 
   selectedRecipe = () => {
     if (this.state.selectedRecipeId) {
-      return this.state.allRecipes.filter(r => r.id === this.state.selectedRecipeId)[0]
-    } else {
-      return {
-        title: '',
-        id: '',
-        img: '',
-        directions: '',
-        ingredients: [{ing_name: '', amount: ''}],
-        rating: '',
-        area: '',
-        category: ''
+      const foundRecipe = this.state.allRecipes.filter(r => r.id === this.state.selectedRecipeId)[0]
+      if (foundRecipe){
+        return foundRecipe
+      } else {
+        return {
+          title: '',
+          id: '',
+          img: '',
+          directions: '',
+          ingredients: [{ing_name: '', amount: ''}],
+          rating: '',
+          area: '',
+          category: ''
+        }
       }
     }
   }
+
+  ownedRecipes = () => this.state.allRecipes.filter(r => this.state.user.recipes.includes(r.id))
+
+  favoriteRecipes = () => this.state.allRecipes.filter(r => this.state.user.favorite_recipes.includes(r.id))
+
+
+  isOwned = () => {
+    if (this.state.user.recipes){
+      return this.state.user.recipes.includes(this.state.selectedRecipeId)
+    }
+  }
+
+  isFavorite = () => {
+    if (this.state.user.favorite_recipes){
+      return this.state.user.favorite_recipes.includes(this.state.selectedRecipeId)
+    }
+  }
+
 
   // login = userInfo => {
   //   console.log(userInfo);
@@ -293,7 +348,12 @@ class App extends Component {
   // };
 
   render() {
+    const selectedRecipe = this.selectedRecipe()
 
+    // const ownedRecipes = this.state.allRecipes.filter(r => this.state.user.recipes.includes(r.id))
+    // const favoriteRecipes = this.state.allRecipes.filter(r => this.state.user.favorite_recipes.includes(r.id))
+    
+  
     // const allRecipes = this.state.allRecipes.filter(r => {
     //   return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
     // });
@@ -329,6 +389,8 @@ class App extends Component {
                   onMakeNewRecipe={this.makeNewRecipe}
                   onShowDetails={this.showDetails}
                   user={this.state.user}
+                  recipes={this.ownedRecipes()}
+                  favoriteRecipes={this.favoriteRecipes()}
                 />
               )}
             />
@@ -352,8 +414,7 @@ class App extends Component {
             exact
             render={() => (
               <MainPage 
-              // recipes={allRecipes} 
-              recipes={this.state.allRecipes}
+              recipes={this.state.allRecipes} 
               onShowDetails={this.showDetails} />
             )}
           />
@@ -363,9 +424,12 @@ class App extends Component {
             exact
             render={props => (
               <Details
-                {...props}
-                recipes={this.state.allRecipes}
-                onFavorites={this.addToFavorites}
+                {...props}            
+                isOwned={this.isOwned()}
+                userId={this.state.user.id}
+                isFavorite={this.isFavorite()}
+                onAddToFavorites={this.addToFavorites}
+                onRemoveFromFavorites={this.removeFromFavorites}
                 deleteRecipe={this.deleteRecipe}
                 onChangeRating={this.changeRating}
                 onSelectRecipe={this.selectRecipe}
@@ -380,7 +444,7 @@ class App extends Component {
               <RecipeEditForm
                 {...props}
                 // recipes={this.state.myRecipes.owned_recipes}
-                recipe={this.selectedRecipe()}
+                recipe={selectedRecipe}
                 onSelectRecipe={this.selectRecipe}
                 onEditRecipe={this.editRecipe}
                 updateEditComponent={this.updateEditComponent}
