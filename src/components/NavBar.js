@@ -31,6 +31,8 @@ class NavBar extends Component{
   handleChange = e => {
     this.props.onSearch(e)
   }
+
+
   
   render() {    
     const token = localStorage.getItem("token")
@@ -69,15 +71,15 @@ class NavBar extends Component{
               <div className="right menu">
         <Menu>
             <Menu.Item floated='right'>
-              <Button ><Link to="/">Home</Link></Button>
+              <Link to="/"><Button>Home</Button></Link>
             </Menu.Item>
             
             <Menu.Item floated='right'>
-              <Button ><Link to="/my-page">{token ? `${this.props.user.username}'s Page` : 'My Page'}</Link></Button>
+              <Link to="/my-page"><Button>{token ? `${this.props.user.username}'s Page` : 'My Page'}</Button></Link>
             </Menu.Item>
 
             <Menu.Item floated='right'>
-              {token ? <Button onClick={this.props.onLogout}><Link to="/">Log Out</Link></Button> : <Button><Link to="/login">Log In</Link></Button> }
+              {token ? (<Link to="/"><Button onClick={this.props.onLogout}>Logout</Button></Link>) : (<Link to="/login"><Button>Log In</Button></Link>) }
             </Menu.Item>
         </Menu>
           </div>

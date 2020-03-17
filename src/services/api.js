@@ -62,6 +62,29 @@ const editRecipe = (recipe) => {
       }).then(res => res.json())
 }
 
+const updateRating = (userId, recipeId, rating) => {
+    return fetch(`${API_ROOT}/ratings/${recipeId}`, {
+        method: "PATCH",
+        headers: headers(),
+        body: JSON.stringify({user_id: userId, recipeId: recipeId, rating: rating})
+    }).then(res => res.json())
+}
+
+const addRecipe = (recipe, userId) => {
+    console.log(userId)
+    return fetch(`${API_ROOT}/recipes`, {
+        method: "POST",
+        headers: headers(),
+        body: JSON.stringify({recipe: recipe, user_id: userId})
+    }).then(res => res.json())
+}
+
+const deleteRecipe = (recipeId) => {
+    return fetch(`${API_ROOT}/recipes/${recipeId}`,{
+        method: "DELETE",
+        headers: headers()
+    }).then(res => res.json())
+}
 
 export const api = {
     auth: {
@@ -73,6 +96,9 @@ export const api = {
         allRecipes,
         addFavorite,
         removeFavorite,
-        editRecipe
+        editRecipe,
+        updateRating,
+        addRecipe,
+        deleteRecipe
     }
 }

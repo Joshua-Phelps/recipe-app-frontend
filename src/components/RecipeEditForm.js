@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AddIngredientEditForm from './AddIngredientForm'
+import AddIngredientForm from './AddIngredientForm'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
 import { api } from '../services/api';
 
@@ -14,7 +14,7 @@ class RecipeEditForm extends Component {
             area: '',
             category: '',
             directions: '',
-            ingredients: [{ingName: "", amount: ""}],
+            ingredients: [{ing_name: "", amount: ""}],
             rating: 0,
             hasChanged: false
         }
@@ -44,6 +44,28 @@ class RecipeEditForm extends Component {
         } 
     }
 
+    handleDeleteIngredient = (e, id) => {
+        console.log(id)
+        e.preventDefault()
+        if (this.state.hasChanged){
+            this.setState(prevState => ({
+                ingredients: prevState.ingredients.filter(ing => {
+                    if (ing.id !== id) return ing
+                    return null 
+                })
+            }))
+        } else {
+            const hasChanged = true
+            const {title, img, directions, category, id, area, ingredients, rating} = this.props.recipe
+            this.setState({title, img, directions, category, area, id, rating, hasChanged,
+                ingredients: ingredients.filter((ing) => {
+                    if (ing.id !== id) return ing
+                    return null 
+                })
+            })
+        }
+    }
+
     handleChange = (e) => {
         e.persist()
         if (!this.state.hasChanged){
@@ -63,9 +85,13 @@ class RecipeEditForm extends Component {
                     })
                 })
             } else {
+                this.setState({
+                    title, img, directions, category, area, id, rating, hasChanged, ingredients
+                })
                 this.setState({ [e.target.name]: e.target.value })
             }
         } else {
+            console.log('else')
             this.handleIngredients(e)
         }
     }
@@ -82,13 +108,26 @@ class RecipeEditForm extends Component {
     }
 
     addIngredientInput = (e) => {
-        this.setState((prevState) => ({
-          ingredients: [...prevState.ingredients, {ingName: "", amount: ""}],
-        }));
+        if (this.state.hasChanged){
+            this.setState((prevState) => ({
+              ingredients: [...prevState.ingredients, {ingName: "", amount: ""}],
+            }))
+        } else {
+            let {title, img, directions, id, area, ingredients, rating, category} = this.props.recipe
+            const hasChanged = true 
+            ingredients = [...ingredients, {ingName: "", amount: ""}]
+            this.setState({title, img, directions, area, id, rating, category, hasChanged, ingredients})
+        }
     }
 
     handleSubmit = e => {
-        (this.state.hasChanged) ? (api.recipes.editRecipe(this.state)) : console.log('something')
+        if (this.state.hasChanged) {
+            const id = this.props.match.params.id
+            this.props.onEditRecipe(this.state)
+            this.props.history.push(`/recipe-details/${id}`)
+        } else {
+            alert("You didn't change anything")
+        }
     }
 
     render() {
@@ -114,38 +153,38 @@ class RecipeEditForm extends Component {
         return (
             <div>
             {recipe ? (
-          <Form style={{ padding: "10px" }}onSubmit={e => this.handleSubmit(e)} onChange={this.handleChange}>
+          <Form style={{ padding: "10px" }} onSubmit={e => this.handleSubmit(e)} >
             <Form.Group widths='equal'>
-            <lable style={{ paddingRight:"10px" }} >
+            <label style={{ paddingRight:"10px" }} >
                 Title:
-                <input type="text" value={ !title ? recipe.title : title} name="title" placeholder='Title' />
-            </lable>
+                <input type="text" value={ !title ? recipe.title : title} name="title" placeholder='Title' onChange={this.handleChange} />
+            </label>
             
-            <lable style={{ paddingRight:"10px" }}>
+            <label style={{ paddingRight:"10px" }}>
                 Image:
-                <input type="text" name="img" value={!img ? recipe.img : img} placeholder='Image' />
-            </lable>
+                <input type="text" name="img" value={!img ? recipe.img : img} placeholder='Image' onChange={this.handleChange} />
+            </label>
 
-            <lable style={{ paddingRight:"10px" }} >
+            <label style={{ paddingRight:"10px" }} >
                 Region:
-                <input type="text" name="area" value={!area ? recipe.area : area} placeholder='region' />
-            </lable>
+                <input type="text" name="area" value={!area ? recipe.area : area} placeholder='region' onChange={this.handleChange} />
+            </label>
 
-            <lable style={{ paddingRight:"10px" }} >
+            <label style={{ paddingRight:"10px" }} >
                 Category:{' '}
                 <Dropdown name="category" value={!category ? recipe.category : category } onChange={this.handleCategoryChange} options={categories} placeholder='Choose Category' />
-            </lable>
+            </label>
 
             </Form.Group>
             
-            <lable style={{ paddingRight:"10px" }} >
+            <label style={{ paddingRight:"10px" }} >
                   Directions:
-                  <textarea name="directions" value={!directions ? recipe.directions: directions} placeholder='Directions' />
-            </lable>
+                  <textarea name="directions" value={!directions ? recipe.directions: directions} placeholder='Directions' onChange={this.handleChange} />
+            </label>
 
-            <Form.Group widths='equal'>
+            <Form.Group onChange={this.handleChange} widths='equal'>
                 <Button type='button' onClick={this.addIngredientInput}>Add Ingredient</Button>
-                <AddIngredientEditForm ingredients={this.state.hasChanged ? this.state.ingredients : recipe.ingredients} />
+                <AddIngredientForm onDelete={this.handleDeleteIngredient} ingredients={this.state.hasChanged ? ingredients : recipe.ingredients} />
             </Form.Group>
 
                 <br></br>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AddIngredientForm from './AddIngredientForm'
+import AddIngredientsEditForm from './AddIngredientsEditForm'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
 
 class RecipeForm extends Component {
@@ -8,27 +8,20 @@ class RecipeForm extends Component {
         super()
         this.state = {
             title: '',
-            image: '',
+            img: '',
             area: '',
             category: '',
             directions: '',
-            ingredients: [{ingName: "", amount: ""}],
+            ingredients: [{ing_name: "", amount: ""}],
             rating: 0,
-            userId: null 
-        }
-    }
-
-    componentDidMount(){
-        if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")).id){
-            this.setState({ userId: this.props.user.id })
         }
     }
 
     handleChange = (e) => {
-        if (e.target.className === 'ingName' || e.target.className === 'amount'  ){
+        if (e.target.className === 'ing_name' || e.target.className === 'amount'  ){
             let ingredients = [...this.state.ingredients]
             ingredients[e.target.dataset.id][e.target.className] = e.target.value
-            this.setState({ ingredients }, () => console.log(this.state.ingredients))
+            this.setState({ ingredients })
         } else {
             this.setState({ [e.target.name]: e.target.value })
         } 
@@ -46,8 +39,8 @@ class RecipeForm extends Component {
 
     handleSubmit = e => {
         e.preventDefault()
-        this.props.onMakeNewRecipe(this.state)
-        this.props.myProps.history.push('/')
+        this.props.onMakeNewRecipe(this.state, this.props.user.id)
+        // this.props.myProps.history.push('/')
     }
 
     render() {
@@ -70,38 +63,38 @@ class RecipeForm extends Component {
         ]
 
         return (
-          <Form style={{ padding: "10px" }} onSubmit={e => this.handleSubmit(e)} onChange={this.handleChange}>
+          <Form style={{ padding: "10px" }} onSubmit={e => this.handleSubmit(e)} >
             <Form.Group widths='equal'>
-            <lable style={{ paddingRight:"10px" }} >
+            <label style={{ paddingRight:"10px" }} >
                 Title:
-                <input type="text" value={title} name="title" placeholder='Title' />
-            </lable>
+                <input type="text" value={title} name="title" placeholder='Title' onChange={this.handleChange}/>
+            </label>
             
-            <lable style={{ paddingRight:"10px" }}>
+            <label style={{ paddingRight:"10px" }}>
                 Image:
-                <input type="text" name="image" value={image} placeholder='Image' />
-            </lable>
+                <input type="text" name="img" value={image} placeholder='Image' onChange={this.handleChange} />
+            </label>
 
-            <lable style={{ paddingRight:"10px" }} >
+            <label style={{ paddingRight:"10px" }} >
                 Region:
-                <input type="text" name="area" value={area} placeholder='region' />
-            </lable>
+                <input type="text" name="area" value={area} placeholder='region' onChange={this.handleChange} />
+            </label>
 
-            <lable style={{ paddingRight:"10px" }} >
+            <label style={{ paddingRight:"10px" }} >
                 Category:{' '}
-                <Dropdown name="category" value={this.state.category} onSelect={this.handleCategoryChange} options={categories} placeholder='Choose Category' />
-            </lable>
+                <Dropdown name="category" value={category} onChange={this.handleCategoryChange} options={categories} placeholder='Choose Category' />
+            </label>
 
             </Form.Group>
             
-            <lable style={{ paddingRight:"10px" }} >
+            <label style={{ paddingRight:"10px" }} >
                   Directions:
-                  <textarea name="directions" value={directions} placeholder='Directions' />
-            </lable>
+                  <textarea name="directions" value={directions} placeholder='Directions' onChange={this.handleChange} />
+            </label>
 
             <Form.Group widths='equal'>
                 <Button type='button' onClick={this.addIngredientInput}>Add Ingredient</Button>
-                <AddIngredientForm ingredients={ingredients} />
+                <AddIngredientsEditForm onChange={this.handleChange} ingredients={ingredients} />
             </Form.Group>
 
                 <br></br>

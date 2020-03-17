@@ -4,23 +4,6 @@ import { Redirect } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { api } from '../services/api';
 
-// export default function Details (props) {
-
-//     useEffect(() => {
-//         props.onSelectRecipe(props.match.params.id)
-//     }, [])
-
-//     const recipe = () => {
-//         props.recipes.filter(r => r.id === props.match.params.id)
-//     }
-
-//     return (
-//         <div>
-//             {console.log(props.recipe)}
-//         </div>
-//     )
-// }
-
 class Details extends Component {
 
 
@@ -31,8 +14,9 @@ class Details extends Component {
 
 
     handleRating = (e, { rating }) => {
-        const id = this.props.match.params.id
-        this.props.onChangeRating(rating, id)
+        console.log(rating)
+        // const recipeId = this.props.match.params.id
+        // this.props.onChangeRating(this.props.user.id, recipeId, rating)
     }
 
     listIngredients = () => {
@@ -49,7 +33,7 @@ class Details extends Component {
     }
 
     handleDelete = () => {
-        const id = this.renderInfo(this.getRecipes(), "id")
+        const id = this.props.match.params.id
         this.props.deleteRecipe(id)
         this.props.history.push('/my-page')
     }
@@ -84,10 +68,10 @@ class Details extends Component {
                                 <div className="ui bulleted list">
                                     <h3>Ingredients:</h3>
                                     {recipe.ingredients.map(ingredient => {
-                                        return <div className="item"><li>{ingredient.ing_name.charAt(0).toUpperCase() + ingredient.ing_name.slice(1)}, {ingredient.amount}</li></div>
+                                        return <div key={ingredient.id} className="item"><li>{ingredient.ing_name.charAt(0).toUpperCase() + ingredient.ing_name.slice(1)}, {ingredient.amount}</li></div>
                                         })}
                                 </div>
-                                {token && isOwned ? <Button><Link to={`/edit-recipe/${id}`}>Edit</Link></Button> : null }
+                                {token && isOwned ? <Link to={`/edit-recipe/${id}`}><Button>Edit</Button></Link> : null }
                                 {token && isOwned ? <Button onClick={this.handleDelete}>Delete</Button> : null }
                             </Item.Content>
                         </Item>

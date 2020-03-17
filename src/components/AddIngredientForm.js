@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Button } from 'semantic-ui-react'
 
 class AddIngredientForm extends Component {
 
@@ -6,28 +7,30 @@ class AddIngredientForm extends Component {
 
         return (
             this.props.ingredients.map((val, idx)=> {
-              let ingId = `ing-${idx}`
-              let amountId = `amountId-${idx}`
+              let ingId = `ing-${val.id}`
+              let amountId = `amountId-${val.id}`
               return (
-                <div key={idx}>
+                <div key={val.id}>
                   <label htmlFor={ingId}>{`Ingredient #${idx + 1}`}</label>
                   <input
                     type="text"
                     name={ingId}
                     data-id={idx}
                     id={ingId}
-                    value={this.props.ingredients[idx].ing_name} 
+                    defaultValue={val.ing_name} 
                     className="ing_name"
-                  />
+                    />
                   <label htmlFor={amountId}>{`Amount`}</label>
                   <input
                     type="text"
                     name={amountId}
                     data-id={idx}
                     id={amountId}
-                    value={this.props.ingredients[idx].amount} 
+                    defaultValue={val.amount} 
                     className="amount"
                   />
+                  <button onClick={(e) => this.props.onDelete(e, val.id)}>Delete</button>
+                  
                 </div>
               )
             })

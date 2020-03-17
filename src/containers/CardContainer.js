@@ -12,7 +12,7 @@ class CardContainer extends Component {
         if (this.props.recipes !== undefined){
             return this.props.recipes.map(recipe => {
                 return (
-                <div style={{ paddingRight:"10px", paddingTop:"10px" }}>
+                <div key={recipe.id} style={{ paddingRight:"10px", paddingTop:"10px" }}>
                     <RecipeCard onShowDetails={this.props.onShowDetails} recipe={recipe} />
                 </div>
                 )

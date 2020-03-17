@@ -29,8 +29,8 @@ class App extends Component {
     user: {
       username: '',
       id: null,
-      favoriteRecipes: [],
-      ownedRecipes: []
+      favorite_recipes: [],
+      recipes: []
     },
     allRecipes: [],
     selectedRecipeId: false 
@@ -75,8 +75,17 @@ class App extends Component {
 
   logout = () => {
     localStorage.removeItem("token");
-    this.setState(this.INITIAL_STATE)
-  };
+    this.setState(prevState => ({
+      user: {
+        username: '',
+        id: null,
+        favoriteRecipes: [],
+        ownedRecipes: []
+      },
+      allRecipes: prevState.allRecipes,
+
+    }))
+  }
   // fetchRecipes = () => {
   //   fetch("http://localhost:3000/recipes")
   //     .then(res => res.json())
@@ -128,29 +137,34 @@ class App extends Component {
     )
   }
 
-  changeRating = (rating, id) => {
-    fetch(`http://localhost:3000/recipes/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify({rating, id})
-    }).then(res => res.json())
-    .then(data => {
-      this.setState(prevState => ({
-        myRecipes: {
-          owned_recipes: prevState.myRecipes.owned_recipes.map( r => {
-            if (r.recipe.id === data.recipe.id){
-              return data
-            } else {
-              return r 
-            }
-          }),
-          favorite_recipes: [...prevState.myRecipes.favorite_recipes]
-        }
-      }))
-    })
+  // changeRating = (rating, id) => {
+  //   fetch(`http://localhost:3000/recipes/${id}`, {
+  //     method: "PATCH",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json"
+  //     },
+  //     body: JSON.stringify({rating, id})
+  //   }).then(res => res.json())
+  //   .then(data => {
+  //     this.setState(prevState => ({
+  //       myRecipes: {
+  //         owned_recipes: prevState.myRecipes.owned_recipes.map( r => {
+  //           if (r.recipe.id === data.recipe.id){
+  //             return data
+  //           } else {
+  //             return r 
+  //           }
+  //         }),
+  //         favorite_recipes: [...prevState.myRecipes.favorite_recipes]
+  //       }
+  //     }))
+  //   })
+  // }
+
+  changeRating = (userId, recipeId, rating) => {
+    api.recipes.updateRating(userId, recipeId, rating)
+    .then(data => console.log(data))
   }
 
   changeCategory = (category) => {
@@ -173,51 +187,73 @@ class App extends Component {
     this.setState({ selectedRecipe: recipe });
   };
 
-  makeNewRecipe = recipeInfo => {
-    fetch(`http://localhost:3000/recipes`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify(recipeInfo)
-    })
-      .then(res => res.json())
-      .then(data =>
-        this.setState(prevState => ({
-          allRecipes: [...prevState.allRecipes, data],
-          myRecipes: {
-            favorite_recipes: prevState.myRecipes.favorite_recipes,
-            owned_recipes: [...prevState.myRecipes.owned_recipes, data]
-          }
-        }))
-      )
-  };
+  // makeNewRecipe = recipeInfo => {
+  //   fetch(`http://localhost:3000/recipes`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json"
+  //     },
+  //     body: JSON.stringify(recipeInfo)
+  //   })
+  //     .then(res => res.json())
+  //     .then(data =>
+  //       this.setState(prevState => ({
+  //         allRecipes: [...prevState.allRecipes, data],
+  //         myRecipes: {
+  //           favorite_recipes: prevState.myRecipes.favorite_recipes,
+  //           owned_recipes: [...prevState.myRecipes.owned_recipes, data]
+  //         }
+  //       }))
+  //     )
+  // };
 
-  editRecipe = (recipeInfo, id) => {
-    fetch(`http://localhost:3000/recipes/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify(recipeInfo)
-    }).then(res => res.json())
-    .then(data => {
-      this.setState(prevState => ({
-        myRecipes: {
-          owned_recipes: prevState.myRecipes.owned_recipes.map( r => {
-            if (r.recipe.id === data.recipe.id){
-              return data
-            } else {
-              return r 
-            }
-          }),
-          favorite_recipes: [...prevState.myRecipes.favorite_recipes]
-        }
-      }))
-    })
-  };
+  makeNewRecipe = (recipe, userId) => {
+    api.recipes.addRecipe(recipe, userId)
+    .then(recipe => this.setState(prevState => ({
+      allRecipes: [...prevState.allRecipes, recipe],
+      user: {
+        ...this.state.user,
+        recipes: [...prevState.user.recipes, recipe.id]
+      }
+    })))
+  }
+
+  // editRecipe = (recipeInfo, id) => {
+  //   fetch(`http://localhost:3000/recipes/${id}`, {
+  //     method: "PATCH",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json"
+  //     },
+  //     body: JSON.stringify(recipeInfo)
+  //   }).then(res => res.json())
+  //   .then(data => {
+  //     this.setState(prevState => ({
+  //       myRecipes: {
+  //         owned_recipes: prevState.myRecipes.owned_recipes.map( r => {
+  //           if (r.recipe.id === data.recipe.id){
+  //             return data
+  //           } else {
+  //             return r 
+  //           }
+  //         }),
+  //         favorite_recipes: [...prevState.myRecipes.favorite_recipes]
+  //       }
+  //     }))
+  //   })
+  // };
+
+  editRecipe = (recipe) => {
+    api.recipes.editRecipe(recipe)
+    .then(recipe => this.setState(prevState=> ({
+      ...prevState,
+      allRecipes: prevState.allRecipes.filter(r => {
+        if (r.id !== recipe.id) return r
+        return recipe 
+      })
+    }))) 
+  }
 
   updateSearch = e => {
     const input = e.target.value;
@@ -229,17 +265,30 @@ class App extends Component {
     
   };
 
-  deleteRecipe = (id) => {
-    fetch(`http://localhost:3000/recipes/${id}`, {
-      method: 'DELETE'
-    })
-      .then(() => this.setState(prevState => ({
-        myRecipes: {
-          favorite_recipes: [...prevState.myRecipes.favorite_recipes],
-          owned_recipes: prevState.myRecipes.owned_recipes.filter(r => r.recipe.id !== id),
-        },
-        allRecipes: prevState.allRecipes.filter(r => r.recipe.id !== id)
-      })))
+  // deleteRecipe = (id) => {
+  //   fetch(`http://localhost:3000/recipes/${id}`, {
+  //     method: 'DELETE'
+  //   })
+  //     .then(() => this.setState(prevState => ({
+  //       myRecipes: {
+  //         favorite_recipes: [...prevState.myRecipes.favorite_recipes],
+  //         owned_recipes: prevState.myRecipes.owned_recipes.filter(r => r.recipe.id !== id),
+  //       },
+  //       allRecipes: prevState.allRecipes.filter(r => r.recipe.id !== id)
+  //     })))
+  // }
+
+  deleteRecipe = (recipeId) => {
+    const deletedId = parseInt(recipeId)
+    api.recipes.deleteRecipe(recipeId)
+    .then(() => this.setState(prevState => ({
+      allRecipes: prevState.allRecipes.filter(r => r.id !== deletedId),
+      user: {
+        ...prevState.user,
+        favorite_recipes: prevState.user.favorite_recipes.filter(id => id !== deletedId),
+        recipes: prevState.user.recipes.filter(id => id !== deletedId)
+      }
+    })))
   }
 
   // addToFavorites = (recipeId, userId) => {
