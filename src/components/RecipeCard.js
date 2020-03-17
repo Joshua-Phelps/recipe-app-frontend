@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 class RecipeCard extends Component {
 
 handleShowDetails = () => {
-    this.props.onShowDetails(this.props.recipe)
+    
 }
 
     render() {
@@ -13,7 +13,7 @@ handleShowDetails = () => {
         let { ingredients } = this.props.recipe
 
         return (
-            <div className="cards" onClick={() => this.handleShowDetails()} >
+            <div className="cards" >
                 {this.props.recipe ? (
                     <Link to={`/recipe-details/${this.props.recipe.id}`} >
                         <Card raised image={this.props.recipe.img} header={this.props.recipe.title} />

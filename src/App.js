@@ -33,7 +33,8 @@ class App extends Component {
       recipes: []
     },
     allRecipes: [],
-    selectedRecipeId: false 
+    selectedRecipeId: false, 
+    loaded: false
   }
   
   state = this.INITIAL_STATE
@@ -51,7 +52,7 @@ class App extends Component {
   // };
 
   componentDidMount() {
-    api.recipes.allRecipes().then(recipes => this.setState({ ...this.state, allRecipes: recipes}))
+    api.recipes.allRecipes().then(recipes => this.setState({ ...this.state, loaded: true, allRecipes: recipes}))
     const token = localStorage.getItem("token");
     if (token) {
       api.auth.getCurrentUser().then(user => {
@@ -183,9 +184,9 @@ class App extends Component {
     }
   }
 
-  showDetails = recipe => {
-    this.setState({ selectedRecipe: recipe });
-  };
+  // showDetails = recipe => {
+  //   this.setState({ selectedRecipe: recipe });
+  // };
 
   // makeNewRecipe = recipeInfo => {
   //   fetch(`http://localhost:3000/recipes`, {
@@ -246,11 +247,11 @@ class App extends Component {
 
   editRecipe = (recipe) => {
     api.recipes.editRecipe(recipe)
-    .then(recipe => this.setState(prevState=> ({
-      ...prevState,
-      allRecipes: prevState.allRecipes.filter(r => {
-        if (r.id !== recipe.id) return r
-        return recipe 
+    // .then(newRecipe => this.setState({allRecipes: newRecipe}))
+    .then(newRecipe => this.setState(prevState=> ({
+      allRecipes: prevState.allRecipes.map(r => {
+        if (r.id !== newRecipe.id) return r
+        return newRecipe 
       })
     }))) 
   }
@@ -370,6 +371,7 @@ class App extends Component {
   }
 
 
+
   // login = userInfo => {
   //   console.log(userInfo);
   //   fetch("http://localhost:3000/login", {
@@ -436,7 +438,7 @@ class App extends Component {
                   {...props}
                   myProps={props}
                   onMakeNewRecipe={this.makeNewRecipe}
-                  onShowDetails={this.showDetails}
+                  // onShowDetails={this.showDetails}
                   user={this.state.user}
                   recipes={this.ownedRecipes()}
                   favoriteRecipes={this.favoriteRecipes()}
@@ -464,7 +466,8 @@ class App extends Component {
             render={() => (
               <MainPage 
               recipes={this.state.allRecipes} 
-              onShowDetails={this.showDetails} />
+              // onShowDetails={this.showDetails} 
+              />
             )}
           />
 
@@ -494,6 +497,7 @@ class App extends Component {
                 {...props}
                 // recipes={this.state.myRecipes.owned_recipes}
                 recipe={selectedRecipe}
+                loaded={this.state.loaded}
                 onSelectRecipe={this.selectRecipe}
                 onEditRecipe={this.editRecipe}
                 updateEditComponent={this.updateEditComponent}

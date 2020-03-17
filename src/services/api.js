@@ -59,7 +59,7 @@ const editRecipe = (recipe) => {
         method: "PATCH",
         headers: headers(),
         body: JSON.stringify(recipe)
-      }).then(res => res.json())
+        }).then(res => res.json())
 }
 
 const updateRating = (userId, recipeId, rating) => {
