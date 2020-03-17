@@ -7,15 +7,15 @@ class NavBar extends Component{
 
 
   uniqCategories = () => {
-    // const uniq = this.props.recipes.map(recipe => recipe.recipe.category).filter((v, i, a) => a.indexOf(v) === i).sort().map(category => category)
-    //   uniq.splice(0, 1, "All")
-    //   return uniq.map(category => <div className="item"><li>{category}</li></div>)
+    const uniq = this.props.recipes.map(recipe => recipe.category).filter((v, i, a) => a.indexOf(v) === i).sort().map(category => category)
+      uniq.splice(0, 1, "All Categories")
+      return uniq.map(category => <div className="item"><li>{category}</li></div>)
   }
 
   uniqAreas = () => {
-    // const uniq = this.props.recipes.map(recipe => recipe.recipe.area).filter((v, i, a) => a.indexOf(v) === i).sort().map(area => area)
-    //   uniq.splice(0, 1, "All")
-    //   return uniq.map(area => <div className="item"><li>{area}</li></div>)
+    const uniq = this.props.recipes.map(recipe => recipe.area).filter((v, i, a) => a.indexOf(v) === i).sort().map(area => area)
+      uniq.splice(0, 1, "All Areas")
+      return uniq.map(area => <div className="item"><li>{area}</li></div>)
   }
 
   handleCategorySelect = (e) => {
@@ -46,13 +46,13 @@ class NavBar extends Component{
           tabular
           margin-bottom="10em"
           style={{ backgroundColor: '#fff', paddingTop: '1em' }}>         
-          <Dropdown item text={this.props.category !== ''? this.props.category : 'Sort By Category'}>
+          <Dropdown item text={this.props.category}>
             <Dropdown.Menu>
                 <Dropdown.Item  onClick={(e) => this.handleCategorySelect(e)}>{this.uniqCategories()}</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
 
-          <Dropdown item text={this.props.area !== ''? this.props.area : 'Sort By Area'}>
+          <Dropdown item text={this.props.area}>
             <Dropdown.Menu>
                 <Dropdown.Item onClick={(e) => this.handleAreaSelect(e)}>{this.uniqAreas()}</Dropdown.Item>
             </Dropdown.Menu>

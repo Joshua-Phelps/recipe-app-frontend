@@ -66,6 +66,7 @@ class Details extends Component {
                             <Item.Image size='medium' src={recipe.img} />
                             <Item.Content>
                                 <div className="ui bulleted list">
+
                                     <h3>Ingredients:</h3>
                                     {recipe.ingredients.map(ingredient => {
                                         return <div key={ingredient.id} className="item"><li>{ingredient.ing_name.charAt(0).toUpperCase() + ingredient.ing_name.slice(1)}, {ingredient.amount}</li></div>

@@ -14,17 +14,6 @@ import SignUp from './components/SignUp'
 
 class App extends Component {
 
-  BLANK_RECIPE = {
-    id: null,
-    title: '',
-    img: '',
-    directions: '',
-    area: '',
-    category: '',
-    rating: '',
-    ingredients: [{amount: '', ing_name: ''}]
-  }
-
   INITIAL_STATE = {
     user: {
       username: '',
@@ -34,7 +23,10 @@ class App extends Component {
     },
     allRecipes: [],
     selectedRecipeId: false, 
-    loaded: false
+    loaded: false,
+    search: '',
+    category: 'All Categories',
+    area: 'All Areas'
   }
   
   state = this.INITIAL_STATE
@@ -169,19 +161,11 @@ class App extends Component {
   }
 
   changeCategory = (category) => {
-    if (category !== "All") {
-      this.setState({ category: category })
-    } else {
-      this.setState({ category: "" })
-    }
+      this.setState({ category })
   }
 
   changeArea = (area) => {
-    if (area !== "All") {
-      this.setState({ area: area })
-    } else {
-      this.setState({ area: "" })
-    }
+      this.setState({ area })
   }
 
   // showDetails = recipe => {
@@ -257,11 +241,8 @@ class App extends Component {
   }
 
   updateSearch = e => {
-    const input = e.target.value;
-    const upFirstLetter = input.charAt(0).toUpperCase() + input.slice(1);
-    console.log("__CAPITALIZE__", upFirstLetter)
     this.setState({
-      search: upFirstLetter
+      search: e.target.value
     })
     
   };
@@ -353,10 +334,46 @@ class App extends Component {
     }
   }
 
-  ownedRecipes = () => this.state.allRecipes.filter(r => this.state.user.recipes.includes(r.id))
+  // allRecipes = () => {
+  //   return this.state.allRecipes.filter(r => r.title.toLowerCase().includes(this.state.search.toLowerCase()))
+  // }
 
-  favoriteRecipes = () => this.state.allRecipes.filter(r => this.state.user.favorite_recipes.includes(r.id))
+  ownedRecipes = () => {
+    const owned = this.state.allRecipes.filter(r => this.state.user.recipes.includes(r.id))
+    return this.allFilters(owned)
+  }
 
+  filterBySearch = (recipes) => {
+    return recipes.filter(r => r.title.toLowerCase().includes(this.state.search.toLowerCase()))
+  }
+
+  allFilters = (recipes) => {
+    const bySearch = this.filterBySearch(recipes)
+    const byCategory = this.filterByCategory(bySearch)
+    const byArea = this.filterByArea(byCategory)
+    return byArea
+  } 
+
+  favoriteRecipes = () => {
+    const favs = this.state.allRecipes.filter(r => this.state.user.favorite_recipes.includes(r.id))
+    return this.allFilters(favs)
+  }
+
+  filterByCategory = (recipes) => {
+    if (this.state.category === 'All Categories') return recipes
+    return recipes.filter(r => {
+      if (r.category === '') return null
+      return this.state.category.includes(r.category)
+    })
+  }
+
+  filterByArea = (recipes) => {
+    if (this.state.area === 'All Areas') return recipes
+    return recipes.filter(r => {
+      if (r.area === '') return null
+      return this.state.area.includes(r.area)
+    })
+  }
 
   isOwned = () => {
     if (this.state.user.recipes){
@@ -465,7 +482,7 @@ class App extends Component {
             exact
             render={() => (
               <MainPage 
-              recipes={this.state.allRecipes} 
+              recipes={this.allFilters(this.state.allRecipes)} 
               // onShowDetails={this.showDetails} 
               />
             )}
