@@ -26,7 +26,6 @@ class AddIngredientForm extends Component {
                     data-id={idx}
                     id={amountId}
                     defaultValue={this.props.ingredients[idx].amount} 
-                    // value={'test'} 
                     className="amount"
                     onChange={this.props.onChange}
                   />

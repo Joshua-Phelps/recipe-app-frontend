@@ -18,15 +18,7 @@ class SignUp extends Component {
     }
 
     handleSignUp = () => {
-        api.auth.signUp(this.state).then(data => console.log(data))
-        // fetch('http://localhost:3000/users', {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": 'application/json',
-        //         Accept: 'application/json'
-        //     },
-        //     body: JSON.stringify(this.state)
-        // }).then(() => this.props.history.push('/login'))
+        api.auth.signUp(this.state)
     }
 
     render() {

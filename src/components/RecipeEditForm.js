@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
 import AddIngredientForm from './AddIngredientForm'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
-import { api } from '../services/api';
 
 class RecipeEditForm extends Component {
 
     constructor(props){
         super(props)
-        // const id = this.props.match.params.id
-        // this.props.onSelectRecipe(id)
         this.state = {
             id: null,
             title: '',
@@ -78,32 +75,6 @@ class RecipeEditForm extends Component {
         } else {
             this.setState({ [e.target.name]: e.target.value })
         } 
-        // if (this.state.loaded){
-        //     const {title, img, directions, category, id, area, ingredients, rating} = this.props.recipe
-        //     const loaded = true
-        //     if (e.target.className === 'ing_name' || e.target.className === 'amount' ){
-        //         const selectedIdx =  parseInt(e.target.dataset.id, 10)
-        //         this.setState({
-        //             title, img, directions, category, area, id, rating, loaded,
-        //             ingredients: ingredients.map((ing, idx )=> {
-        //                 if (idx === selectedIdx){
-        //                     ing[e.target.className] = e.target.value
-        //                     return ing
-        //                 } else {
-        //                     return ing 
-        //                 }
-        //             })
-        //         })
-        //     } else {
-        //         this.setState({
-        //             title, img, directions, category, area, id, rating, loaded, ingredients
-        //         })
-        //         this.setState({ [e.target.name]: e.target.value })
-        //     }
-        // } else {
-        //     console.log('else')
-        //     this.handleIngredients(e)
-        // }
     }
 
     handleCategoryChange = (e, value) => {

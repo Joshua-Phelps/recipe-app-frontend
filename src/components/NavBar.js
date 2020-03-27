@@ -78,8 +78,6 @@ class NavBar extends Component{
               {token &&
                 <Link to="/my-page"><Button>{`${this.props.user.username}'s Page`}</Button></Link>
               }
-
-              {/* <Link to="/my-page"><Button>{token ? `${this.props.user.username}'s Page` : 'My Page'}</Button></Link> */}
             </Menu.Item>
 
             <Menu.Item floated='right'>
@@ -95,5 +93,3 @@ class NavBar extends Component{
 }
 
 export default NavBar;
-
-// https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTzDLV4KOwUnZSzw-SKsdxQi3QwRUmy6UtI6cQB6rwfoJixY9o1

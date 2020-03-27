@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import CardContainer from '../containers/CardContainer'
-import RecipeCard from './RecipeCard'
-import { Input, Menu, Segment } from 'semantic-ui-react'
+import { Menu, Segment } from 'semantic-ui-react'
 import RecipeForm from './RecipeForm'
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 class MyPage extends Component {
 

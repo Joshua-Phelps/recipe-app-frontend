@@ -12,13 +12,6 @@ class Details extends Component {
         this.props.onSelectRecipe(id)
     }
 
-
-    handleRating = (e, { rating }) => {
-        console.log(rating)
-        // const recipeId = this.props.match.params.id
-        // this.props.onChangeRating(this.props.user.id, recipeId, rating)
-    }
-
     listIngredients = () => {
         return this.getRecipes().ingredients.map(ingredient => {
             return <div className="item"><li>{ingredient.ing_name.charAt(0).toUpperCase() + ingredient.ing_name.slice(1)}</li></div>
@@ -39,7 +32,6 @@ class Details extends Component {
     }
 
     handleAddFavorite = () => {
-        console.log('adding')
         api.recipes.addFavorite(this.props.recipe.id, this.props.userId)
         .then(data => this.props.onAddToFavorites(data.recipe_id))
     }

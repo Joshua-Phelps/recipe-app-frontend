@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { api } from "../services/api";
-import { Card, Image, Icon, Button, Label } from 'semantic-ui-react'
+import { Card, Image, Icon, Button } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
 class RecipeCard extends Component {
