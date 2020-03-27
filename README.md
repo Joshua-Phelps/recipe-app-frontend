@@ -10,4 +10,9 @@ To start:
 - fork and clone this repo
 - run npm install
 - run npm start
+- visit http://localhost:3001/
+- Login with 
+  - username: Admin 
+  - password: Admin 
+  - or create your own user 
 
