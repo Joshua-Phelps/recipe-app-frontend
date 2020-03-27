@@ -40,7 +40,8 @@ class RecipeForm extends Component {
     handleSubmit = e => {
         e.preventDefault()
         this.props.onMakeNewRecipe(this.state, this.props.user.id)
-        // this.props.myProps.history.push('/')
+        this.props.onSetTab('My Recipes')
+        this.props.myProps.history.push('/my-page')
     }
 
     render() {

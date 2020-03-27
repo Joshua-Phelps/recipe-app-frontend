@@ -18,9 +18,13 @@ class MyPage extends Component {
         this.setState({ activeItem: name})
     }    
 
+    setTab = (value) => {
+        this.setState({activeItem: value})
+    }
+
     render() {
         const { activeItem } = this.state
-        const { recipes, favoriteRecipes, user } = this.props
+        const { recipes, favoriteRecipes, user, isFavorite } = this.props
         
       
         return (
@@ -44,9 +48,25 @@ class MyPage extends Component {
                 </Menu>
 
                 <Segment attached='bottom'>
-                    {(this.state.activeItem === 'My Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails}  recipes={recipes} /> : null }
-                    {(this.state.activeItem === 'Favorite Recipes') ? <CardContainer onShowDetails={this.props.onShowDetails} recipes={favoriteRecipes} /> : null }
-                    {(this.state.activeItem === 'Add Recipes') ? <RecipeForm user={user} onMakeNewRecipe={this.props.onMakeNewRecipe} myProps={this.props.myProps} /> : null }
+                    {(this.state.activeItem === 'My Recipes') && 
+                    <CardContainer 
+                        onRemoveFromFavorites={this.props.onRemoveFromFavorites} 
+                        onAddToFavorites={this.props.onAddToFavorites} 
+                        userId={this.props.userId} 
+                        isFavorite={isFavorite} 
+                        onShowDetails={this.props.onShowDetails}  
+                        recipes={recipes} /> 
+                    }
+                    {(this.state.activeItem === 'Favorite Recipes') && 
+                    <CardContainer 
+                        onRemoveFromFavorites={this.props.onRemoveFromFavorites} 
+                        onAddToFavorites={this.props.onAddToFavorites} 
+                        userId={this.props.userId} 
+                        isFavorite={isFavorite} 
+                        onShowDetails={this.props.onShowDetails} 
+                        recipes={favoriteRecipes} />
+                    }
+                    {(this.state.activeItem === 'Add Recipes') ? <RecipeForm user={user} onSetTab={this.setTab} onMakeNewRecipe={this.props.onMakeNewRecipe} myProps={this.props.myProps} /> : null }
 
                 </Segment>
             </div>

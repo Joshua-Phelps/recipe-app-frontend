@@ -11,9 +11,16 @@ class CardContainer extends Component {
         // console.log(this.props.recipes)
         if (this.props.recipes !== undefined){
             return this.props.recipes.map(recipe => {
+                
                 return (
-                <div key={recipe.id} style={{ paddingRight:"10px", paddingTop:"10px" }}>
-                    <RecipeCard onShowDetails={this.props.onShowDetails} recipe={recipe} />
+                <div key={recipe.id} style={{ height: '100%', paddingRight:"10px", paddingTop:"10px" }}>
+                    <RecipeCard 
+                    userId={this.props.userId} 
+                    onRemoveFromFavorites={this.props.onRemoveFromFavorites} 
+                    onAddToFavorites={this.props.onAddToFavorites} 
+                    isFavorite={this.props.isFavorite}  
+                    onShowDetails={this.props.onShowDetails} 
+                    recipe={recipe} />
                 </div>
                 )
             })

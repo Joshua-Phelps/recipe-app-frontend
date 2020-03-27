@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import { api } from "./services/api";
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import MainPage from "./components/MainPage";
 import MyPage from "./components/MyPage";
 import Details from "./components/Details";
 import NavBar from "./components/NavBar";
 import RecipeEditForm from './components/RecipeEditForm'
-import Login from "./Login";
 import LoginForm from "./components/LoginForm";
-import RecipeForm from './components/RecipeForm'
 import SignUp from './components/SignUp'
+import Spinner from './components/Spinner'
 
 class App extends Component {
 
@@ -30,41 +29,26 @@ class App extends Component {
   }
   
   state = this.INITIAL_STATE
-  // state = {
-  //   allRecipes: [],
-  //   myRecipes: { owned_recipes: [], favorite_recipes: [] },
-  //   loggedIn: false,
-  //   selectedRecipe: false,
-  //   user_id: null,
-  //   search: "",
-  //   category: "",
-  //   area: "",
-  //   user: { id: null, username: ''},
-  //   updateEdit: 0, 
-  // };
 
   componentDidMount() {
     api.recipes.allRecipes().then(recipes => this.setState({ ...this.state, loaded: true, allRecipes: recipes}))
     const token = localStorage.getItem("token");
     if (token) {
       api.auth.getCurrentUser().then(user => {
-        if (user.error) return alert(user.error)
-        this.setState({ 
-          user: user,
-         });
+        if (user.error) return localStorage.removeItem("token")
+        this.setState({user})
       })
     } 
   }
-
-
 
   login = user => {
     api.auth.login(user)
     .then(data => {
       localStorage.setItem("token", data.jwt);
+      console.log(data.user)
       this.setState({...this.state, user: data.user})
     })
-  };
+  }
 
   logout = () => {
     localStorage.removeItem("token");
@@ -79,11 +63,6 @@ class App extends Component {
 
     }))
   }
-  // fetchRecipes = () => {
-  //   fetch("http://localhost:3000/recipes")
-  //     .then(res => res.json())
-  //     .then(data => this.setState({ allRecipes: data, user: JSON.parse(localStorage.getItem("user")) }));
-  // };
 
   selectRecipe = (id) => {
     this.setState({...this.state, selectedRecipeId: parseInt(id, 10)})
@@ -130,31 +109,6 @@ class App extends Component {
     )
   }
 
-  // changeRating = (rating, id) => {
-  //   fetch(`http://localhost:3000/recipes/${id}`, {
-  //     method: "PATCH",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json"
-  //     },
-  //     body: JSON.stringify({rating, id})
-  //   }).then(res => res.json())
-  //   .then(data => {
-  //     this.setState(prevState => ({
-  //       myRecipes: {
-  //         owned_recipes: prevState.myRecipes.owned_recipes.map( r => {
-  //           if (r.recipe.id === data.recipe.id){
-  //             return data
-  //           } else {
-  //             return r 
-  //           }
-  //         }),
-  //         favorite_recipes: [...prevState.myRecipes.favorite_recipes]
-  //       }
-  //     }))
-  //   })
-  // }
-
   changeRating = (userId, recipeId, rating) => {
     api.recipes.updateRating(userId, recipeId, rating)
     .then(data => console.log(data))
@@ -168,33 +122,8 @@ class App extends Component {
       this.setState({ area })
   }
 
-  // showDetails = recipe => {
-  //   this.setState({ selectedRecipe: recipe });
-  // };
-
-  // makeNewRecipe = recipeInfo => {
-  //   fetch(`http://localhost:3000/recipes`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json"
-  //     },
-  //     body: JSON.stringify(recipeInfo)
-  //   })
-  //     .then(res => res.json())
-  //     .then(data =>
-  //       this.setState(prevState => ({
-  //         allRecipes: [...prevState.allRecipes, data],
-  //         myRecipes: {
-  //           favorite_recipes: prevState.myRecipes.favorite_recipes,
-  //           owned_recipes: [...prevState.myRecipes.owned_recipes, data]
-  //         }
-  //       }))
-  //     )
-  // };
-
   makeNewRecipe = (recipe, userId) => {
-    api.recipes.addRecipe(recipe, userId)
+    return api.recipes.addRecipe(recipe, userId)
     .then(recipe => this.setState(prevState => ({
       allRecipes: [...prevState.allRecipes, recipe],
       user: {
@@ -204,34 +133,8 @@ class App extends Component {
     })))
   }
 
-  // editRecipe = (recipeInfo, id) => {
-  //   fetch(`http://localhost:3000/recipes/${id}`, {
-  //     method: "PATCH",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json"
-  //     },
-  //     body: JSON.stringify(recipeInfo)
-  //   }).then(res => res.json())
-  //   .then(data => {
-  //     this.setState(prevState => ({
-  //       myRecipes: {
-  //         owned_recipes: prevState.myRecipes.owned_recipes.map( r => {
-  //           if (r.recipe.id === data.recipe.id){
-  //             return data
-  //           } else {
-  //             return r 
-  //           }
-  //         }),
-  //         favorite_recipes: [...prevState.myRecipes.favorite_recipes]
-  //       }
-  //     }))
-  //   })
-  // };
-
   editRecipe = (recipe) => {
     api.recipes.editRecipe(recipe)
-    // .then(newRecipe => this.setState({allRecipes: newRecipe}))
     .then(newRecipe => this.setState(prevState=> ({
       allRecipes: prevState.allRecipes.map(r => {
         if (r.id !== newRecipe.id) return r
@@ -247,19 +150,6 @@ class App extends Component {
     
   };
 
-  // deleteRecipe = (id) => {
-  //   fetch(`http://localhost:3000/recipes/${id}`, {
-  //     method: 'DELETE'
-  //   })
-  //     .then(() => this.setState(prevState => ({
-  //       myRecipes: {
-  //         favorite_recipes: [...prevState.myRecipes.favorite_recipes],
-  //         owned_recipes: prevState.myRecipes.owned_recipes.filter(r => r.recipe.id !== id),
-  //       },
-  //       allRecipes: prevState.allRecipes.filter(r => r.recipe.id !== id)
-  //     })))
-  // }
-
   deleteRecipe = (recipeId) => {
     const deletedId = parseInt(recipeId)
     api.recipes.deleteRecipe(recipeId)
@@ -272,43 +162,6 @@ class App extends Component {
       }
     })))
   }
-
-  // addToFavorites = (recipeId, userId) => {
-  //   console.log(recipeId, userId);
-  //   fetch(`http://localhost:3000/user_recipes`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json"
-  //     },
-  //     body: JSON.stringify({
-  //       recipe_id: recipeId,
-  //       user_id: userId
-  //     })
-  //   })
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       if (!data.error) {
-  //         this.setState(prevState => ({
-  //           myRecipes: {
-  //             favorite_recipes: [...prevState.myRecipes.favorite_recipes, data],
-  //             owned_recipes: prevState.myRecipes.owned_recipes
-  //           }
-  //         }))
-  //         alert("Recipe is successfully added to your favorites!")
-  //       } else if (data.destroyed) {
-  //         this.setState(prevState => ({
-  //           myRecipes: {
-  //             owned_recipes: [...prevState.myRecipes.owned_recipes],
-  //             favorite_recipes: prevState.myRecipes.favorite_recipes.filter(r => r.recipe.id !== data.id)
-  //           }
-  //         }))
-  //         alert("Recipe is successfully removed from your favorites!")
-  //       } else {
-  //         alert("You can not add your own recipe to favorites!")
-  //       }
-  //     });
-  // };
 
   clearLoggedIn = () => {
     this.setState({loggedIn: false})
@@ -333,10 +186,6 @@ class App extends Component {
       }
     }
   }
-
-  // allRecipes = () => {
-  //   return this.state.allRecipes.filter(r => r.title.toLowerCase().includes(this.state.search.toLowerCase()))
-  // }
 
   ownedRecipes = () => {
     const owned = this.state.allRecipes.filter(r => this.state.user.recipes.includes(r.id))
@@ -387,150 +236,122 @@ class App extends Component {
     }
   }
 
-
-
-  // login = userInfo => {
-  //   console.log(userInfo);
-  //   fetch("http://localhost:3000/login", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json"
-  //     },
-  //     body: JSON.stringify(userInfo)
-  //   })
-  //     .then(res => res.json())
-  //     .then(json => localStorage.setItem("user", JSON.stringify(json)))
-  //     // .then(json => {
-  //     //   console.log(localStorage);
-  //     //   return json;
-  //     // })
-  //     .then(() => {
-  //       if(JSON.parse(localStorage.getItem("user")).id) {
-  //         this.fetchMyRecipes(JSON.parse(localStorage.getItem("user")).id)
-  //         this.setState({user: JSON.parse(localStorage.getItem("user"))})
-  //       } else {
-  //         alert ("Wrong info!")
-  //       }
-  //   })
-  // };
+  isFavorite2 = (recipe) => {
+    if(this.state.user.favorite_recipes){
+      return this.state.user.favorite_recipes.includes(recipe.id)
+    }
+  }
 
   render() {
     const selectedRecipe = this.selectedRecipe()
 
-    // const ownedRecipes = this.state.allRecipes.filter(r => this.state.user.recipes.includes(r.id))
-    // const favoriteRecipes = this.state.allRecipes.filter(r => this.state.user.favorite_recipes.includes(r.id))
-    
-  
-    // const allRecipes = this.state.allRecipes.filter(r => {
-    //   return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
-    // });
-    // const ownedRecipes = this.state.myRecipes.owned_recipes.filter(r => {
-    //   return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
-    // });
-    // const favoriteRecipes = this.state.myRecipes.favorite_recipes.filter(r => {
-    //   return (r.recipe.title.includes(this.state.search) && r.recipe.category.includes(this.state.category) && r.recipe.area.includes(this.state.area))
-    // });
     return (
       <Router>
-        <NavBar
-          recipes={this.state.allRecipes}
-          search={this.state.search}
-          onSearch={this.updateSearch}
-          changeCategory={this.changeCategory}
-          changeArea={this.changeArea}
-          onClearLoggedIn={this.clearLoggedIn}
-          user={this.state.user}
-          category={this.state.category}
-          area={this.state.area}
-          onLogout={this.logout}
-        />
-        <Switch>
-          {localStorage.length !== 0 ? (
-            <Route
-              path="/my-page"
-              exact
-              render={props => (
-                <MyPage
-                  {...props}
-                  myProps={props}
-                  onMakeNewRecipe={this.makeNewRecipe}
-                  // onShowDetails={this.showDetails}
-                  user={this.state.user}
-                  recipes={this.ownedRecipes()}
-                  favoriteRecipes={this.favoriteRecipes()}
-                />
-              )}
-            />
-          ) : (
-            <Route
-              path="/login"
-              exact
-              render={props => (
-                <LoginForm
-                  {...props}
-                  fetchRecipes={this.fetchMyRecipes}
-                  onLogin={this.login}
-                  loggedIn={this.state.loggedIn}
-                />
-              )}
-            />
-          )}
-
-          <Route
-            path="/"
-            exact
-            render={() => (
-              <MainPage 
-              recipes={this.allFilters(this.state.allRecipes)} 
-              // onShowDetails={this.showDetails} 
+          <NavBar
+            recipes={this.state.allRecipes}
+            search={this.state.search}
+            onSearch={this.updateSearch}
+            changeCategory={this.changeCategory}
+            changeArea={this.changeArea}
+            onClearLoggedIn={this.clearLoggedIn}
+            user={this.state.user}
+            category={this.state.category}
+            area={this.state.area}
+            onLogout={this.logout}
+          />
+        {this.state.loaded ? 
+          <>
+          <Switch>
+            {localStorage.length !== 0 ? (
+              <Route
+                path="/my-page"
+                exact
+                render={props => (
+                  <MyPage
+                    {...props}
+                    myProps={props}
+                    onMakeNewRecipe={this.makeNewRecipe}
+                    isFavorite={this.isFavorite2} 
+                    user={this.state.user}
+                    recipes={this.ownedRecipes()}
+                    favoriteRecipes={this.favoriteRecipes()}
+                    onAddToFavorites={this.addToFavorites}
+                    onRemoveFromFavorites={this.removeFromFavorites}
+                    userId={this.state.user.id}
+                  />
+                )}
+              />
+            ) : (
+              <Route
+                path="/login"
+                exact
+                render={props => (
+                  <LoginForm
+                    {...props}
+                    fetchRecipes={this.fetchMyRecipes}
+                    onLogin={this.login}
+                    loggedIn={this.state.loggedIn}
+                  />
+                )}
               />
             )}
-          />
 
-          <Route
-            path="/recipe-details/:id"
-            exact
-            render={props => (
-              <Details
-                {...props}            
-                isOwned={this.isOwned()}
-                userId={this.state.user.id}
-                isFavorite={this.isFavorite()}
+            <Route
+              path="/"
+              exact
+              render={() => (
+                <MainPage 
+                recipes={this.allFilters(this.state.allRecipes)}
+                isFavorite={this.isFavorite2} 
                 onAddToFavorites={this.addToFavorites}
                 onRemoveFromFavorites={this.removeFromFavorites}
-                deleteRecipe={this.deleteRecipe}
-                onChangeRating={this.changeRating}
-                onSelectRecipe={this.selectRecipe}
-                recipe={this.selectedRecipe()}
-              />
-            )}
-          />
-          <Route
-            path="/edit-recipe/:id"
-            exact
-            render={props => (
-              <RecipeEditForm
-                {...props}
-                // recipes={this.state.myRecipes.owned_recipes}
-                recipe={selectedRecipe}
-                loaded={this.state.loaded}
-                onSelectRecipe={this.selectRecipe}
-                onEditRecipe={this.editRecipe}
-                updateEditComponent={this.updateEditComponent}
-              />
-            )}
-          />
-          <Route
-            path="/sign-up"
-            exact
-            render={(props) => (
-              <SignUp {...props} />
-            )}
-          />
-        </Switch>
-      </Router>
+                userId={this.state.user.id}
+                />
+              )}
+            />
 
+            <Route
+              path="/recipe-details/:id"
+              exact
+              render={props => (
+                <Details
+                  {...props}            
+                  isOwned={this.isOwned()}
+                  userId={this.state.user.id}
+                  isFavorite={this.isFavorite()}
+                  onAddToFavorites={this.addToFavorites}
+                  onRemoveFromFavorites={this.removeFromFavorites}
+                  deleteRecipe={this.deleteRecipe}
+                  onChangeRating={this.changeRating}
+                  onSelectRecipe={this.selectRecipe}
+                  recipe={this.selectedRecipe()}
+                />
+              )}
+            />
+            <Route
+              path="/edit-recipe/:id"
+              exact
+              render={props => (
+                <RecipeEditForm
+                  {...props}
+                  recipe={selectedRecipe}
+                  loaded={this.state.loaded}
+                  onSelectRecipe={this.selectRecipe}
+                  onEditRecipe={this.editRecipe}
+                  updateEditComponent={this.updateEditComponent}
+                />
+              )}
+            />
+            <Route
+              path="/sign-up"
+              exact
+              render={(props) => (
+                <SignUp {...props} />
+              )}
+            />
+          </Switch>
+        </> : <Spinner />}
+      </Router>
     );
   }
 }
