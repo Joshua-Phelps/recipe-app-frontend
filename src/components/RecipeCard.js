@@ -46,8 +46,3 @@ class RecipeCard extends Component {
 }
 
 export default RecipeCard
-
-{/* <div >
-    <h2>{this.props.recipe.title}</h2>
-    <img src={this.props.recipe.img} />
-</div> */}

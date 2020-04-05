@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Item, Rating, Button } from 'semantic-ui-react'
-import { Redirect } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { api } from '../services/api';
 

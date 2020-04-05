@@ -75,13 +75,23 @@ class NavBar extends Component{
             </Menu.Item>
             
             <Menu.Item floated='right'>
-              {token &&
-                <Link to="/my-page"><Button>{`${this.props.user.username}'s Page`}</Button></Link>
-              }
+              {token && 
+              <Link to="/my-page">
+                <Button>{`${this.props.user.username}'s Page`}</Button>
+              </Link>}
             </Menu.Item>
 
             <Menu.Item floated='right'>
-              {token ? (<Link to="/"><Button onClick={this.props.onLogout}>Logout</Button></Link>) : (<Link to="/login"><Button>Log In</Button></Link>) }
+              {(token
+              ) ? ( 
+              <Link to="/">
+                <Button onClick={this.props.onLogout}>Logout</Button>
+              </Link>
+              ) : (
+              <Link to="/login">
+                <Button>Log In</Button>
+              </Link> 
+              ) }
             </Menu.Item>
         </Menu>
           </div>
