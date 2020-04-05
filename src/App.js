@@ -60,7 +60,6 @@ class App extends Component {
         ownedRecipes: []
       },
       allRecipes: prevState.allRecipes,
-
     }))
   }
 
@@ -74,7 +73,8 @@ class App extends Component {
       user: { 
         ...prevState.user, 
         favorite_recipes: [...prevState.user.favorite_recipes, recipeId]
-      }}))
+      }
+    }))
   }
 
   removeFromFavorites = (id) => {
@@ -86,7 +86,8 @@ class App extends Component {
       user: { 
         ...prevState.user, 
         favorite_recipes: newFavorites
-      }}))
+      }
+    }))
   }
 
 
@@ -100,8 +101,8 @@ class App extends Component {
             favorite_recipes: data.favorite_recipes
           }
         })
-      );
-  };
+      )
+  }
 
   updateEditComponent = () => {
     this.setState(prevState => (
@@ -146,9 +147,8 @@ class App extends Component {
   updateSearch = e => {
     this.setState({
       search: e.target.value
-    })
-    
-  };
+    })    
+  }
 
   deleteRecipe = (recipeId) => {
     const deletedId = parseInt(recipeId)
